@@ -1,0 +1,3 @@
+# Optional: camera-movement measurement and people recognition
+opencv-python-headless
+numpy

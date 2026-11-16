@@ -1,0 +1,21 @@
+# macOS and Python
+.DS_Store
+__pycache__/
+*.pyc
+
+# Your own data never belongs in the repository
+library/
+catalogues/
+secrets.json
+.env
+
+# ffmpeg builds dropped into bin/
+bin/ffmpeg
+bin/ffprobe
+
+# footage
+*.mov
+*.mp4
+*.mxf
+*.braw
+*.m4v
