@@ -76,7 +76,7 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .sec .act{font-size:11px;font-weight:600;letter-spacing:0;cursor:pointer;opacity:.9}
 .sec.proj{color:var(--proj);border-color:var(--proj)}.sec.ppl{color:var(--ppl);border-color:var(--ppl)}.sec.set{color:var(--set);border-color:var(--set)}
 .proj-i{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px}.proj-i:hover{background:#151517}
-.proj-i .ini{flex:0 0 34px;height:34px;border-radius:8px;color:#120c05;font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
+.proj-i .ini{overflow:hidden;flex:0 0 34px;height:34px;border-radius:8px;color:#120c05;font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
 .proj-i .tx{flex:1;min-width:0}.proj-i .nm{display:block;font-size:14px;font-weight:600;color:#e8e6e1;overflow-wrap:anywhere}.proj-i .sb{display:block;font-size:11.5px;color:#9a968e}.proj-i .sb.run{color:var(--accent)}
 .proj-i .ct{font-size:11px;color:#b8b5ae;background:#1d1d1d;border-radius:8px;padding:0 8px}
 .pbar2{display:flex;height:5px;border-radius:3px;overflow:hidden;background:#2a2a2a;margin-top:6px}.pbar2 span{display:block}
@@ -167,6 +167,8 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .strip{display:flex;gap:3px;margin:6px 0}.strip img{flex:1;min-width:0;aspect-ratio:16/9;object-fit:cover;cursor:pointer;border-radius:3px;opacity:.85}.strip img:hover{opacity:1}
 .btns{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin:6px 0}.btns button{font-size:12px;padding:4px 8px}.jklb{display:inline-flex;gap:0;margin:0 3px}.jklb button{border-radius:0;margin-left:-1px;min-width:38px}.jklb button:first-child{border-radius:6px 0 0 6px;margin-left:0}.jklb button:last-child{border-radius:0 6px 6px 0}
 .tio{font:12px ui-monospace,Menlo,monospace;color:var(--muted);margin-bottom:8px}
+.proj-i .ini img{width:100%;height:100%;object-fit:cover;display:block}
+.dpico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;overflow:hidden;vertical-align:middle;margin-right:8px;color:#120c05;font-weight:800;font-size:11px}.dpico img{width:100%;height:100%;object-fit:cover;display:block}
 .rate span{font-size:20px;cursor:pointer;color:#4a4a4a}.rate span.on{color:var(--accent)}
 .fl{font-size:11px;color:var(--muted);margin:10px 0 4px;display:flex;justify-content:space-between;gap:8px}.fl em{font-style:normal;color:#7fb0e6}
 textarea{width:100%;resize:vertical;min-height:52px}textarea.grow{resize:none;overflow:hidden;box-sizing:border-box}
@@ -480,7 +482,7 @@ async function renderDash(){const box=$('#dashView');if(!box.classList.contains(
      <div class="dseg" id="dScope"><button data-s="project" class="${all?'':'on'}" ${p?'':'disabled'}>This project</button><button data-s="all" class="${all?'on':''}">All projects</button></div></div>
    <div class="dtiles">${all?`<div class="dtile"><b>${d.projects.length}</b><span>projects</span></div>`:''}<div class="dtile"><b>${n}</b><span>clips</span></div><div class="dtile"><b>${dRun(d.runtime)}</b><span>of footage</span></div><div class="dtile"><b>${dBytes(d.footage_mb*1e6)}</b><span>on your drives</span></div>
      <div class="dtile"><b style="color:${DC.bl}">${n?Math.round(rev/n*100):0}%</b><span>reviewed</span></div><div class="dtile"><b style="color:${DC.gr}">${sel}</b><span>selects</span></div></div>
-   ${all?dCard('Projects','click a row to open it',`<table class="dtable" style="table-layout:fixed"><colgroup><col><col style="width:80px"><col style="width:30%"><col style="width:110px"><col style="width:110px"><col style="width:150px"></colgroup><thead><tr><th>Project</th><th class="dr">Clips</th><th>Review</th><th class="dr">Runtime</th><th class="dr">App data</th><th>Last sent</th></tr></thead><tbody>${d.projects.map(x=>`<tr class="drow" data-open="${esc(x.id)}"><td><b>${esc(x.name)}</b>${tag(x.mode)}</td><td class="dr">${x.clips}</td><td>${x.clips?pbar(x.status):''}</td><td class="dr">${dRun(x.runtime)}</td><td class="dr">${dBytes(x.app_bytes)}</td><td class="pm">${x.last_sent?dDate(x.last_sent):'Not sent yet'}</td></tr>`).join('')}</tbody></table>`):''}
+   ${all?dCard('Projects','click a row to open it',`<table class="dtable" style="table-layout:fixed"><colgroup><col><col style="width:80px"><col style="width:30%"><col style="width:110px"><col style="width:110px"><col style="width:150px"></colgroup><thead><tr><th>Project</th><th class="dr">Clips</th><th>Review</th><th class="dr">Runtime</th><th class="dr">App data</th><th>Last sent</th></tr></thead><tbody>${d.projects.map(x=>`<tr class="drow" data-open="${esc(x.id)}"><td><span class="dpico" style="background:${pcol(x.id)}">${x.icon_url?`<img src="${esc(x.icon_url)}" alt="">`:esc((x.name||'?').trim().charAt(0).toUpperCase())}</span><b>${esc(x.name)}</b>${tag(x.mode)}</td><td class="dr">${x.clips}</td><td>${x.clips?pbar(x.status):''}</td><td class="dr">${dRun(x.runtime)}</td><td class="dr">${dBytes(x.app_bytes)}</td><td class="pm">${x.last_sent?dDate(x.last_sent):'Not sent yet'}</td></tr>`).join('')}</tbody></table>`):''}
    <div class="dg2">
     ${dCard('Still to do',all?'click a project to open it and see those clips':'click Show to see those clips',todo('review','Clips to review','Not yet approved or rejected','#fff')+todo('movement','Camera movement to confirm','Orange or red confidence on approved clips',DC.ye)+(d.faces_on?todo('faces','Faces to name','People the app found but doesn\'t know',DC.gr):'')+todo('nodesc','Clips without a description','The AI describer hasn\'t run on these',DC.pu)+todo('unsent','Selects not yet sent',arch&&!all?'Approved since the last Send':'Approved, waiting for Send',DC.bl))}
     <div class="dcol">${dCard('Review progress',`${rev} of ${n} clips reviewed`,dStack(review))}
@@ -529,7 +531,7 @@ function projRow(x,on){const c=x.counts||{},st=x.status||{},run=st.state==='runn
   const sub=run?`${st.stage||'Processing'}${st.total?` ${st.done} of ${st.total}`:''}…`
     :[c.approved&&`${c.approved} approved`,c.ingested&&`${c.ingested} ${x.mode==='archive'?'sent':'ingested'}`,c.rejected&&`${c.rejected} rejected`,c.unreviewed&&`${c.unreviewed} to review`].filter(Boolean).join(' · ')||'No clips yet';
   const t=c.clips||1,seg=(n,col)=>n?`<span style="flex:${n} 0 0;background:${col}"></span>`:'';
-  return `<div class="proj-i ${on?'on':''}" data-id="${esc(x.id)}"><span class="ini" style="background:${pcol(x.id)}">${esc((x.name||'?').trim().charAt(0).toUpperCase())}</span>
+  return `<div class="proj-i ${on?'on':''}" data-id="${esc(x.id)}"><span class="ini" style="background:${pcol(x.id)}">${x.icon_url?`<img src="${esc(x.icon_url)}" alt="">`:esc((x.name||'?').trim().charAt(0).toUpperCase())}</span>
     <span class="tx"><span class="nm">${esc(x.name)}${x.mode?`<span class="mtag ${x.mode}">${x.mode==='shoot'?'Managed':'Linked'}</span>`:''}</span><span class="sb ${run?'run':''}">${esc(sub)}</span>${on&&c.clips?`<span class="pbar2">${seg(c.approved,'#3d7fd9')}${seg(c.ingested,'#3fae5c')}${seg(c.rejected,'#d06060')}${seg(c.unreviewed,'#4a4a4a')}</span>`:''}</span>
     <span class="ct" title="Clips">${c.clips||0}</span></div>`}
 function renderProjects(){const p=proj(),q=($('#projQ').value||'').trim().toLowerCase(),sort=$('#projSort').value,opened=store.get('fs.opened',{});
@@ -953,6 +955,7 @@ function select(id){SEL=id;const c=CAT.clips[id];if(!c)return;stopJ();
   ${c.offline?`<div class="flag" style="background:#3d1b1b;color:#ffb0b0">File not found: ${esc(c.moved_to||((c.src_dir||'')+'/'+c.file))}. Is the drive connected?</div>`:''}
   </div><div class="dscroll" id="dscroll">
   <div class="rate" id="rate" style="margin-top:8px">${[1,2,3,4,5].map(n=>`<span data-n="${n}" class="${n<=(c.review.rating||0)?'on':''}">★</span>`).join('')}</div>
+  <div class="sw ${(proj()||{}).icon&&proj().icon.clip===c.id?'on':''}" id="pIconSw" title="Uses the frame showing in the player"><span class="tr"></span><span>Use as project icon</span></div>
   <div id="roleBox" style="display:${isSel(c)?'':'none'}"><div class="fl">Role <span>A-roll unless you choose B-roll</span></div>
    <div class="seg" id="role">${(OPT.roles||[]).map(r=>`<button data-r="${r}" class="${role(c)===r?'on':''}">${r}${r==='B-roll'?'<kbd>B</kbd>':''}</button>`).join('')}</div></div>
   ${(c.flags||[]).map(f=>`<div class="flag">⚠ ${esc(f)}</div>`).join('')}
@@ -983,6 +986,7 @@ function select(id){SEL=id;const c=CAT.clips[id];if(!c)return;stopJ();
   $('#cpyName').onclick=()=>copyName();
   d.querySelectorAll('#rate span').forEach(s=>s.onclick=()=>setRating(+s.dataset.n===cur().review.rating?0:+s.dataset.n));
   d.querySelectorAll('#role button').forEach(b=>b.onclick=()=>setRole(b.dataset.r));
+  $('#pIconSw').onclick=setProjIcon;
   $('#eshot').onchange=e=>update({shot_type:e.target.value||null},false,true);
   $('#eangle').onchange=e=>update({angle:e.target.value||null});
   $('#emove').onchange=e=>{update({movement:e.target.value||null});$('#confBox').innerHTML=confHtml(cur());wireConf()};
@@ -1061,6 +1065,12 @@ async function setStatus(s,advance=true,extra=null){const c=CAT.clips[SEL];
 async function copyName(){const c=CAT.clips[SEL];if(!c)return;const n=clipName(c);
   try{await navigator.clipboard.writeText(n)}catch(_){const t=document.createElement('textarea');t.value=n;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}
   toast('Copied: <code>'+esc(n)+'</code>',2500)}
+async function setProjIcon(){const sw=$('#pIconSw'),c=cur(),pid=PID;if(!sw||!c)return;
+  if(sw.classList.contains('on')){const r=await api(`/api/p/${pid}/icon`,{clear:true});if(r.error)return toast(esc(r.error));sw.classList.remove('on');await refreshLib();return}
+  const v=$('#v'),w=v&&v.videoWidth,h=v&&v.videoHeight;if(!w||!h)return toast('The player hasn\'t loaded this clip yet. Try again in a moment.');
+  const s=Math.min(w,h),cv=document.createElement('canvas');cv.width=cv.height=256;cv.getContext('2d').drawImage(v,(w-s)/2,(h-s)/2,s,s,0,0,256,256);
+  const r=await api(`/api/p/${pid}/icon`,{clip:c.id,t:+v.currentTime.toFixed(2),image:cv.toDataURL('image/jpeg',0.88)});
+  if(r.error)return toast(esc(r.error));if(cur()===c)$('#pIconSw')?.classList.add('on');await refreshLib();toast('Project icon set from this frame.',2500)}
 function setRating(n){update({rating:n});document.querySelectorAll('#rate span').forEach(s=>s.classList.toggle('on',+s.dataset.n<=n))}
 function setRole(r){update({role:r});document.querySelectorAll('#role button').forEach(b=>b.classList.toggle('on',b.dataset.r===r))}
 // ---- JKL transport ----

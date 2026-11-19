@@ -103,6 +103,7 @@ class Handler(BaseHTTPRequestHandler):
                 st = ["ingested" if arch and c["review"]["status"] == "approved" and c.get("sent") else c["review"]["status"] for c in cs]
                 pr["counts"] = {"clips": len(cs), **{k: st.count(k) for k in ("approved", "ingested", "rejected", "unreviewed")}}
                 pr["status"] = L.STATUS.get(pr["id"], {"state": "idle"})
+                pr["icon_url"] = L.icon_url(pr, cs)
             import export
             lib["options"] = {"meta_fields": export.META_FIELDS, "roles": L.ROLES, "shot_types": L.SHOT_TYPES, "angles": L.ANGLES,
                               "movements": L.MOVEMENTS, "tokens": export.TOKENS,
@@ -146,6 +147,9 @@ class Handler(BaseHTTPRequestHandler):
             for c in cat["clips"].values():  # flag clips whose file can't be found right now
                 c["offline"] = not os.path.exists(L.clip_path(c))
             return self.send_json(cat)
+        m = re.match(r"^/p/([^/]+)/icon\.jpg$", p)
+        if m:
+            return self.send_file(L.icon_file(os.path.basename(m.group(1))))
         m = re.match(r"^/p/([^/]+)/(thumbs|proxies|faces)/([^/]+)$", p)
         if m:
             pid, kind, name = m.groups()
@@ -259,6 +263,16 @@ class Handler(BaseHTTPRequestHandler):
                     clip["review"]["role"] = "A-roll"
                 L.save_cat(pid, cat)
             return self.send_json(clip["review"])
+        if action == "icon":  # use the frame in the player as the project icon, or clear it
+            if data.get("clear"):
+                return self.send_json(L.clear_icon(pid))
+            import base64
+            try:
+                img = base64.b64decode((data.get("image") or "").split(",")[-1])
+            except ValueError:
+                img = b""
+            r = L.set_icon(pid, data.get("clip", ""), img, data.get("t"))
+            return self.send_json(r, 400 if r.get("error") else 200)
         if action == "mode":
             r = L.set_mode(pid, data.get("mode"), data.get("root"))
             return self.send_json(r, 400 if r.get("error") else 200)

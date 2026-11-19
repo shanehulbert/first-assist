@@ -257,6 +257,59 @@ def update_project(pid, **kw):
         return p
 
 
+# ---------- project icon ----------
+
+
+def icon_file(pid):
+    return os.path.join(pdir(pid), "icon.jpg")
+
+
+def set_icon(pid, cid, jpeg, t=None):
+    """Save a square frame chosen in the player as the project icon. Only one clip per project."""
+    if not jpeg or not jpeg.startswith(b"\xff\xd8"):
+        return {"error": "That image couldn't be read."}
+    with LOCK:
+        if cid not in load_cat(pid)["clips"]:
+            return {"error": "no such clip"}
+        os.makedirs(pdir(pid), exist_ok=True)
+        tmp = icon_file(pid) + ".tmp"
+        with open(tmp, "wb") as f:
+            f.write(jpeg)
+        os.replace(tmp, icon_file(pid))
+        lib = load_lib()
+        p = next(x for x in lib["projects"] if x["id"] == pid)
+        p["icon"] = {"clip": cid, "t": t}
+        save_lib(lib)
+    return {"ok": True, "icon": p["icon"]}
+
+
+def clear_icon(pid):
+    with LOCK:
+        lib = load_lib()
+        p = next(x for x in lib["projects"] if x["id"] == pid)
+        p.pop("icon", None)
+        save_lib(lib)
+        if os.path.exists(icon_file(pid)):
+            os.remove(icon_file(pid))  # our own small image in the library, never footage
+    return {"ok": True}
+
+
+def icon_url(p, clips):
+    """The picture shown for a project: the chosen frame, else the first approved 5-star clip,
+    else the first approved clip (middle thumbnail), else "" for the coloured initial."""
+    pid = p["id"]
+    f = icon_file(pid)
+    if p.get("icon") and os.path.exists(f):
+        return f"/p/{pid}/icon.jpg?v={os.stat(f).st_mtime_ns}"
+    sel = sorted((c for c in clips if c.get("review", {}).get("status") in SELECTED and c.get("thumbs")),
+                 key=lambda c: (c.get("meta", {}).get("recorded") or "") + c.get("file", ""))
+    for pick in ([c for c in sel if c["review"].get("rating") == 5], sel):
+        if pick:
+            th = pick[0]["thumbs"]
+            return f"/p/{pid}/{urllib.parse.quote(th[len(th) // 2]['src'])}"
+    return ""
+
+
 def set_mode(pid, mode, root=None):
     """Switch a project between New shoot and From existing footage. Nothing on disk is moved by switching."""
     p = project(pid)

@@ -6,6 +6,7 @@ Ingest Sorter is a local macOS app that sorts, tags, rates and approves video fo
 
 - **Read the code before changing it.** `sorter/static/index.html` is one large single-page app with dense, one-line functions. Search for the function, read it, then make a small exact edit.
 - **Small changes, one at a time.** Commit after each working change with a plain-language message.
+- After Shane confirms a change works, commit and push it to GitHub. Never push untested changes.
 - **Say what was tested and what wasn't.** If you could not see it on screen or run it in Resolve, say so.
 - **Never touch footage.** Don't move, rename or delete anything on the Video Drive or in a footage folder. Test with copies or generated clips in a temp folder.
 - **Never commit personal data.** The library (projects, people, faces, API key) lives outside this folder, in `../library`. Keep real names and personal paths out of code, examples and docs.

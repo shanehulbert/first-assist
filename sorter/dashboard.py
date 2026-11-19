@@ -110,7 +110,8 @@ def build(pids=None):
         out["runtime"] += runtime
         out["status"].update(st)
         out["projects"].append({"id": pid, "name": p["name"], "mode": p.get("mode") or "", "clips": len(clips), "runtime": runtime,
-                                "status": dict(st), "todo": dict(ptodo), "app_bytes": sum(use.values()), "last_sent": last})
+                                "status": dict(st), "todo": dict(ptodo), "app_bytes": sum(use.values()), "last_sent": last,
+                                "icon_url": L.icon_url(p, clips)})
     out["shared_bytes"] = _du(os.path.join(L.LIB, "models")) + _du(L.people_dir())
     cams = out.pop("cameras")
     out["cameras"] = [{"name": k, "n": round(v)} for k, v in cams.most_common(6)]
