@@ -34,6 +34,16 @@ def mac_choose_folder(prompt):
     return r.stdout.strip().rstrip("/") or None
 
 
+class QuietServer(ThreadingHTTPServer):
+    """Browsers often open a connection and drop it unused (spare connections, cancelled
+    pictures or videos). That's normal, so don't print a scary error in Terminal for it."""
+
+    def handle_error(self, request, client_address):
+        if isinstance(sys.exc_info()[1], (ConnectionResetError, BrokenPipeError, ConnectionAbortedError)):
+            return
+        super().handle_error(request, client_address)
+
+
 class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
@@ -357,7 +367,7 @@ def main():
     server = None
     for port in range(a.port, a.port + 10):
         try:
-            server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
+            server = QuietServer(("127.0.0.1", port), Handler)
             break
         except OSError:
             if port == a.port:
