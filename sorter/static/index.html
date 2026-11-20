@@ -235,6 +235,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 .box label{display:block;font-size:12px;color:var(--muted);margin:12px 0 4px}.pick{display:flex;gap:6px}.pick input{flex:1}
 .box .help{font-size:11px;color:var(--muted);margin-top:4px}.box .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
 .aiseg{display:flex;gap:4px;margin-bottom:6px}.aiseg button{flex:1;font-size:11.5px;padding:4px 0}.aiseg button.on{background:var(--sel);color:#fff;border-color:var(--sel)}
+.ntres{font-size:11px;margin:2px 0 6px}.ntres.ok{color:#7fd49a}.ntres.bad{color:#f0a27a}
 .aist{font-size:11px;margin:4px 0}.aist.ok{color:#7fd49a}.aist.bad{color:#f0a27a}.keyrow{display:flex;gap:4px}.keyrow input{flex:1}
 .opt{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:12.5px}.opt input{margin-top:3px}
 .modeseg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 6px}.modeseg button{text-align:left;display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:10px;background:#1a1a1a;border:1px solid #333;white-space:normal}
@@ -286,6 +287,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
   <div class="tp" id="tp-settings">
    <div class="tband set">Settings</div>
    <div id="settings"></div>
+   <div id="notionPanel"></div>
   </div>
  </aside>
 
@@ -649,7 +651,30 @@ function renderAIPanel(){
     if(on&&PID&&FC&&FC.models){const n=Object.values(CAT.clips).filter(c=>!c.faces).length;
       if(n&&confirm(`${n} clip${n===1?'':'s'} in this project haven't been checked for people yet. Look for people now?`)){const r=await api(`/api/p/${PID}/faces/scan`,{});if(r.error)toast(esc(r.error));else{toast('Looking for people…');startPoll()}}}};
 }
-function renderSettings(){const p=proj();renderAIPanel();if(!p){$('#settings').innerHTML='<div class="pm">Create a project to see its settings.</div>';$('#sendSettings').innerHTML='';return}
+// ---------- Notion (optional) ----------
+let NT=null,NTRES={},NTOPEN=false;
+async function renderNotion(){const box=$('#notionPanel');if(!box)return;try{NT=await api('/api/notion')}catch(e){box.innerHTML='';return}
+  if(!NT.has_token&&!NTOPEN){box.innerHTML=`<div class="blk"><h5>Notion</h5><div class="pm">Optional. Link projects to a Notion production system. <button class="link" id="ntOpen">Connect to Notion…</button></div></div>`;
+    $('#ntOpen').onclick=()=>{NTOPEN=true;renderNotion()};return}
+  const res=k=>{const r=NTRES[k];if(!r||r.missing)return NT.ds[k]?'<div class="ntres ok">Found ✓</div>':'';
+    return r.ok?`<div class="ntres ok">Found: ${esc(r.title||'(untitled)')} ✓${r.note?' '+esc(r.note):''}</div>`:`<div class="ntres bad">${esc(r.message)}</div>`};
+  box.innerHTML=`<div class="blk"><h5>Notion</h5>
+    <label class="pm">Notion token</label>
+    ${NT.has_token?`<div class="aist ok">Token saved on this Mac ✓ <button class="link" id="ntTest">Test</button> · <button class="link" id="ntClr">Remove</button></div>`
+      :`<div class="keyrow"><input id="ntKey" type="password" placeholder="ntn_…" autocomplete="off"><button id="ntSave">Save</button></div><div class="pm">From notion.so › Settings › Connections › Develop or manage integrations. It's stored only on this Mac.</div>`}
+    ${NT.has_token?`<div class="pm" style="margin:8px 0 4px">Notion database IDs (or paste a link to each database)</div>
+    ${Object.entries(NT.databases).map(([k,l])=>`<label class="pm">${esc(l)}</label><input data-ntid="${k}" value="${esc(NT.ids[k]||'')}" placeholder="ID or link" autocomplete="off">${res(k)}`).join('')}
+    <div class="sendrow" style="margin-top:6px"><button id="ntCheck">Check databases</button></div>
+    <div class="pm" style="margin-top:4px">Checking only reads from Notion. Applies to all projects.</div>`:''}
+   </div>`;
+  const sv=$('#ntSave');if(sv)sv.onclick=async()=>{const k=$('#ntKey').value.trim();if(!k)return;sv.disabled=true;sv.textContent='Checking…';
+    const r=await api('/api/notion/token',{token:k});toast(r.ok?'Token saved. '+esc(r.message):esc(r.message),6000);renderNotion()};
+  const ts=$('#ntTest');if(ts)ts.onclick=async()=>{const r=await api('/api/notion/token',{});toast(esc(r.message),6000)};
+  const cl=$('#ntClr');if(cl)cl.onclick=async()=>{if(!confirm('Remove the saved Notion token from this Mac?'))return;await api('/api/notion/token',{clear:true});NTRES={};NTOPEN=false;renderNotion()};
+  box.querySelectorAll('[data-ntid]').forEach(i=>i.onchange=async()=>{NT=await api('/api/notion/ids',{ids:{[i.dataset.ntid]:i.value}});delete NTRES[i.dataset.ntid];renderNotion()});
+  const ck=$('#ntCheck');if(ck)ck.onclick=async()=>{ck.disabled=true;ck.textContent='Checking…';const r=await api('/api/notion/check',{});NTRES=r.results||{};renderNotion()};
+}
+function renderSettings(){const p=proj();renderAIPanel();renderNotion();if(!p){$('#settings').innerHTML='<div class="pm">Create a project to see its settings.</div>';$('#sendSettings').innerHTML='';return}
   const toks=p.name_tokens||OPT.default_tokens,sep=p.name_sep??OPT.default_sep,unused=Object.keys(OPT.tokens||{}).filter(t=>!toks.includes(t));
   const ex=(SEL&&CAT.clips[SEL])||Object.values(CAT.clips).find(c=>c.review.status==='approved')||Object.values(CAT.clips)[0];
   $('#settings').innerHTML=`

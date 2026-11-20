@@ -51,8 +51,14 @@ def set_key(key):
     key = (key or "").strip()
     path = _secrets_file()
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    try:  # keep other saved secrets (the Notion token)
+        with open(path) as f:
+            s = json.load(f)
+    except (OSError, ValueError):
+        s = {}
+    s["anthropic_key"] = key
     with open(path, "w") as f:
-        json.dump({"anthropic_key": key}, f)
+        json.dump(s, f)
     os.chmod(path, 0o600)
     return bool(key)
 

@@ -140,6 +140,9 @@ class Handler(BaseHTTPRequestHandler):
             st = tagger.settings()
             return self.send_json({"has_key": bool(tagger.get_key()), "key_from_env": bool(os.environ.get("ANTHROPIC_API_KEY")),
                                    "claude_models": tagger.CLAUDE_MODELS, "ollama": tagger.ollama_status(st.get("ollama_url"))})
+        if p == "/api/notion":
+            import notion
+            return self.send_json(notion.status())
         if p == "/api/faces":
             import faces
             return self.send_json({"cv": faces.cv_ok(), "models": faces.models_ready(), "download": faces.DL})
@@ -207,6 +210,23 @@ class Handler(BaseHTTPRequestHandler):
             if key and res["ok"]:
                 tagger.set_key(key)
             return self.send_json({**res, "has_key": bool(tagger.get_key())})
+        if p == "/api/notion/token":  # save (checked first), test, or remove the Notion token
+            import notion
+            if data.get("clear"):
+                notion.set_token("")
+                return self.send_json({"ok": True, "has_token": False})
+            tok = (data.get("token") or "").strip()
+            res = notion.check_token(tok or None)
+            if tok and res["ok"]:
+                notion.set_token(tok)
+            return self.send_json({**res, "has_token": bool(notion.get_token())})
+        if p == "/api/notion/ids":
+            import notion
+            notion.save_ids(data.get("ids") or {})
+            return self.send_json(notion.status())
+        if p == "/api/notion/check":
+            import notion
+            return self.send_json({"results": notion.check_ids(), **notion.status()})
         if p == "/api/settings":
             import export
             return self.send_json({"settings": {**export.DEFAULT_SETTINGS, **L.update_settings(data)}})
