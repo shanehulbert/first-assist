@@ -1,5 +1,5 @@
--- Ingest Sorter: can a script write clip metadata in free Resolve?
--- Select ONE clip in the Media Pool, run Workspace > Scripts > Ingest Sorter - Metadata Test.
+-- First Assist: can a script write clip metadata in free Resolve?
+-- Select ONE clip in the Media Pool, run Workspace > Scripts > First Assist - Metadata Test.
 -- Results appear as a bin called "IS Metadata Test" with one sub-folder per result (Console output doesn't show in free Resolve).
 local R = resolve or (Resolve and Resolve()) or (app and app:GetResolve())
 local results = {}

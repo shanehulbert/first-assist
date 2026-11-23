@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ingest Sorter - merge tagger output into a project.
+"""First Assist - merge tagger output into a project.
 
 A tagger (local model, cloud model, or a person) produces JSON like:
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Ingest Sorter - (re)install the Resolve script for a project's last Send.
+"""First Assist - (re)install the Resolve script for a project's last Send.
 
     python3 install_script.py <project-id>
 
-Writes "Ingest Sorter - Apply Last Send.lua" into Resolve's Scripts folder
+Writes "First Assist - Apply Last Send.lua" into Resolve's Scripts folder
 (Workspace > Scripts) for the clips in that project's most recent Send.
 """
 import os, sys

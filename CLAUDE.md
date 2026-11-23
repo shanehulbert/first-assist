@@ -1,6 +1,6 @@
-# Ingest Sorter: notes for Claude
+# First Assist: notes for Claude
 
-Ingest Sorter is a local macOS app that sorts, tags, rates and approves video footage before the edit, then sends the selects to DaVinci Resolve. The owner is Shane Hulbert (GitHub: shanehulbert). Explain changes in plain language, by what will be seen on screen, not by what changed in the code.
+First Assist (called Ingest Sorter until 23 November 2026) is a local macOS app that sorts, tags, rates and approves video footage before the edit, then sends the selects to DaVinci Resolve. The owner is Shane Hulbert (GitHub: shanehulbert). Explain changes in plain language, by what will be seen on screen, not by what changed in the code.
 
 ## How to work here
 
@@ -15,7 +15,9 @@ Ingest Sorter is a local macOS app that sorts, tags, rates and approves video fo
 ## Layout
 
 ```
-Open Ingest Sorter.command   launcher: runs sorter/server.py, opens http://localhost:8765
+Open First Assist.command   backup launcher in Terminal: runs sorter/server.py, opens http://localhost:8765
+tools/make_app.sh            builds First Assist.app (default /Applications): starts the server in the background, opens a tab
+branding/                    the studio icon artwork (app icon 1024, tiles); sorter/static/icons/ holds the browser-tab copies
 Check Setup.command          runs sorter/check_setup.py
 sorter/server.py             HTTP server (Python standard library only), all /api routes
 sorter/library.py            library.json, catalogues, projects, ingest pipeline, Send, vocabulary, people
@@ -34,6 +36,22 @@ No build step and no third-party Python packages are required. `opencv-python-he
 
 Run it: `python3 sorter/server.py` (options: `--port`, `--no-browser`, `--library <folder>`).
 Test against a throwaway library: `python3 sorter/server.py --port 8799 --no-browser --library /tmp/testlib`.
+If 8765 is busy the server falls back to the next free port, but never 8766 (Keyword Generator's; its Lightroom
+plug-in only talks to 8766).
+
+**Mac launcher (Stage 3, Nov 2026; same shape as Keyword Generator's).** `tools/make_app.sh` builds a small bundle
+(Info.plist, a bash `launch` script, an .icns made with sips + iconutil, ad-hoc signed). The launch script has this
+folder's path baked in, so rebuild after moving it. It checks `/api/version` on 8765 (`"app"` first-assist, or the
+old footage-sorter → just `open` the URL), alerts if another program holds the port (so the app never ends up on a
+fallback port), else starts `/usr/bin/python3 sorter/server.py --port 8765 --no-browser` with nohup (log:
+`library/first-assist.log`), waits up to 15 s and opens the URL. **On Apple silicon it starts Python with
+`arch -arm64`** (from Finder/the Dock the script can run under Rosetta, and the arm64 OpenCV/NumPy then fail to load;
+`LSRequiresNativeExecution` is set too). `FA_APP_PORT` / `FA_APP_LIBRARY` exist only to build test copies.
+**Quit** (foot of the sidebar) asks once, and again if a project's status is running; it POSTs `/api/quit` (refused
+if the Origin isn't localhost). The server shuts down after replying, then **waits for every POST still in progress**
+(`BUSY` counter: Send, Undo, Move back and New project move files inside one request) before exiting, so a move is
+never cut off half-way. Background threads (scan, previews, AI, faces) just stop. The page shows “has stopped” and
+reloads itself when the app is back (the status poll also shows that page if the server disappears).
 
 ## Data model
 
@@ -61,7 +79,15 @@ Test against a throwaway library: `python3 sorter/server.py --port 8799 --no-bro
 
 - Toggle switches, not checkboxes.
 - Keep the stats row, keyword filter and filter row above the clip browser. Keep the Tool Panels (Library, Filter, AI, Metadata, Send, Settings) with their icons and names.
-- Colours: orange `#e8873a` accent and selected state, blue approved, green ingested or sent, red rejected, purple for filled metadata. See `:root` in `index.html`.
+- Colours: blue approved, green ingested or sent, red rejected, purple for filled metadata. See `:root` in `index.html`.
+- Studio livery shared with Keyword Generator (decided 23 Nov 2026): icon = white bars and chevron on brand purple `#9333ea`
+  (icon tiles only; artwork in `branding/`, browser-tab copies in `sorter/static/icons/`, served at `/icons/…` and
+  `/favicon.ico`); the sidebar shows the 26 px tile beside the wordmark `#a855f7` (flat, no gradient).
+  **Orange `#e8873a` (`--me`) means “your edits” only**: star ratings, and a clip card's scene line when you set the
+  scene yourself. The general accent (`--accent`, `--proj`) is neutral off-white `#e8e6e1` (primary buttons with dark
+  text, selected segments, the Library band, progress bars); focus rings are blue `--set`; running status is grey;
+  the selected project and Managed tag are neutral grey. AI colours (`#a58cf0` and its shades), the Filter tab's yellow,
+  warnings (amber) and Resolve clip colours (A-roll green, B-roll apricot) are unchanged. Don't use purple as a general accent.
 - Class names in `index.html` are global. Prefix new ones (the Dashboard uses `d...`) and check a name isn't already used: `.row` and `.r` have clashed before.
 - Australian English in all user-facing text. Plain words; explain a term the first time.
 - Mock up bigger interface changes and agree them before building.
@@ -71,6 +97,5 @@ Test against a throwaway library: `python3 sorter/server.py --port 8799 --no-bro
 - Speech transcription and dialogue search.
 - Several selects per clip (markers or subclips).
 - Watch folders.
-- A proper Mac app bundle ("Ingest Sorter.app") and renaming the launcher.
 - Windows and Linux (the folder picker and Resolve script install are Mac-only).
 - The Claude prices in `tagger.py` (`CLAUDE_MODELS`) were written by hand and have not been checked against Anthropic's price list.

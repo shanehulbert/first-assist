@@ -1,4 +1,6 @@
-# First Assist for DaVinci Resolve
+# First Assist
+
+**AI logging and selects for DaVinci Resolve.**
 
 Sort, tag, rate and approve your footage **before** it goes into an edit. Then send the selects to DaVinci Resolve in one step: clips imported, named, marked, coloured and tagged, on a draft timeline.
 
@@ -23,17 +25,17 @@ Your original files are never renamed or deleted.
 
 Allow about 15 minutes. You'll paste a few commands into **Terminal** (find it with Spotlight: press Cmd-Space and type "Terminal"). Paste each command and press Return.
 
-### 1. Download Ingest Sorter
+### 1. Download First Assist
 
 1. On this page, click the green **Code** button, then **Download ZIP**.
 2. Unzip it.
-3. Make a folder to hold it, for example `Movies/Ingest Sorter`, and move the unzipped folder inside.
+3. Make a folder to hold it, for example `Movies/First Assist`, and move the unzipped folder inside.
 
 The app keeps its own data (projects, thumbnails, previews) in a folder called `library`, which it creates **beside** the app folder. That's why it needs a parent folder of its own:
 
 ```
-Movies/Ingest Sorter/
-├── ingest-sorter-main/     ← the app (the folder you unzipped; its name may differ)
+Movies/First Assist/
+├── first-assist-main/      ← the app (the folder you unzipped; its name may differ)
 └── library/                ← created on first run: your projects and previews
 ```
 
@@ -81,11 +83,21 @@ Double-click **Check Setup.command** in the app folder. It lists what's installe
 
 ### 7. Start the app
 
-Double-click **Open Ingest Sorter.command** (same right-click **Open** the first time). A Terminal window opens and the app appears in your browser at `http://localhost:8765`.
+**The easy way (recommended): First Assist.app.** Build it once, then start First Assist from the Dock like any app.
 
-- **Keep the Terminal window open** while you work. It is the app.
-- To quit, close that Terminal window.
-- If double-clicking won't work, drag the app folder onto the Terminal icon, then run `python3 sorter/server.py`.
+1. In Terminal, run this (it takes a few seconds and only uses tools built into macOS):
+   `"$HOME/Movies/First Assist/first-assist/tools/make_app.sh"`
+   (change the path if your `first-assist` folder is somewhere else). It puts **First Assist.app** in your Applications folder.
+2. Open **Applications** in Finder and drag **First Assist** (the purple icon) to the Dock.
+3. Click it. First Assist starts in the background, with no Terminal window, and opens `http://localhost:8765` in your browser.
+4. If macOS says it can't be opened the first time, open **System Settings › Privacy & Security**, scroll down and click **Open Anyway** next to First Assist, then click it in the Dock again.
+
+- Clicking it again while First Assist is running just opens another tab; it never starts a second copy.
+- To stop it, click **Quit First Assist** at the foot of the sidebar. If something is still running (scanning, AI describing), it asks first. A Send or move that has started always finishes before it stops.
+- It writes a log to `library/first-assist.log`, beside the code folder.
+- If you move or rename the `first-assist` folder, run `tools/make_app.sh` again.
+
+**The backup way: Open First Assist.command.** Double-click it (right-click › **Open** the first time). A Terminal window opens and the app appears in your browser. Keep that window open while you work; close it to stop. If double-clicking won't work, drag the app folder onto the Terminal icon, then run `python3 sorter/server.py`.
 
 ---
 
@@ -138,7 +150,7 @@ You can rename a project or switch its mode later in the **Library** panel. If y
 
 1. In the **Send** panel, press the Send button. This writes a script for Resolve. For Managed Media projects it also moves the selects.
 2. In Resolve, open your project and click the bin you want the clips in.
-3. Choose **Workspace › Scripts › Ingest Sorter - Apply Last Send**.
+3. Choose **Workspace › Scripts › First Assist - Apply Last Send**.
 
 The script:
 
@@ -198,13 +210,13 @@ Named people are then tagged automatically, with a confidence light. Only confir
 | Problem | Fix |
 |---|---|
 | "Can't be opened because it is from an unidentified developer" | Right-click the file › **Open**, or **System Settings › Privacy & Security › Open Anyway** |
-| Red "ffmpeg isn't installed" banner | Do install step 3, then quit Terminal and start the app again |
+| Red "ffmpeg isn't installed" banner | Do install step 3, then quit First Assist (or Terminal) and start it again |
 | `python3: command not found`, or a prompt to install developer tools | Do install step 2 |
-| The browser page didn't open | Go to `http://localhost:8765` yourself. If that port was busy, the Terminal window shows the address it used |
-| "This page is connected to an older engine" | Quit Terminal (Cmd-Q) and start the app again |
+| The browser page didn't open | Go to `http://localhost:8765` yourself. If First Assist.app says the port is in use, close any First Assist Terminal window and try again. Details are in `library/first-assist.log` |
+| "This page is connected to an older engine" | Quit First Assist (or Terminal) and start it again |
 | The script isn't in Resolve's **Workspace › Scripts** menu | Press Send at least once. Open Resolve at least once before your first Send |
 | The script ran but nothing changed | Select a bin first. Check that the footage drive is connected under the same name as when you pressed Send |
-| A new feature doesn't appear after updating | Quit Terminal and start the app again, then refresh the browser page |
+| A new feature doesn't appear after updating | Quit First Assist (or Terminal) and start it again, then refresh the browser page |
 | The local AI describer is slow | The first clip loads the model, which takes a while. A smaller model is faster |
 
 ## Privacy and your data

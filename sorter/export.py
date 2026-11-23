@@ -1,4 +1,4 @@
-"""Ingest Sorter - the files DaVinci Resolve imports.
+"""First Assist - the files DaVinci Resolve imports.
 
   <Project> - metadata.csv          File > Import Metadata To > Media Pool
                                      (match by file name; untick the timecode match)
@@ -153,13 +153,14 @@ def fcpxml(clips, name, ctx):
         pos += x["len"]
     total_a = total_b = pos
     return ('<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE fcpxml>\n<fcpxml version="1.9">\n<resources>\n'
-            + "\n".join(res) + "\n</resources>\n<library>\n<event name=\"Ingest Sorter\">\n"
+            + "\n".join(res) + "\n</resources>\n<library>\n<event name=\"First Assist\">\n"
             + f'<project name={quoteattr(name)}>\n<sequence format="r1" duration="{t(max(total_a, total_b))}" tcStart="0s" tcFormat="NDF">\n<spine>\n'
             + "\n".join(body) + "\n</spine>\n</sequence>\n</project>\n</event>\n</library>\n</fcpxml>\n")
 
 
 ROLE_COLOURS = {"A-roll": "Green", "B-roll": "Apricot"}
-SCRIPT_NAME = "Ingest Sorter - Apply Last Send.lua"
+SCRIPT_NAME = "First Assist - Apply Last Send.lua"
+OLD_SCRIPT_NAME = "Ingest Sorter - Apply Last Send.lua"   # the app's old name; replaced at the next Send
 
 
 BASE_FIELDS = ["Scene", "Shot", "Shot Type", "Shoot Day", "People", "Description", "Keywords", "Comments",
@@ -175,7 +176,7 @@ def project_meta(project):
 
 
 def timeline_name(project):
-    return project.get("timeline_name") or f'{project.get("name", "Ingest Sorter")} - draft'
+    return project.get("timeline_name") or f'{project.get("name", "First Assist")} - draft'
 
 
 def used_meta_fields(approved, ctx=None):
@@ -213,10 +214,10 @@ def resolve_script(clips, ctx, timeline_name, project_name):
         fend = max(fin + 1, int(round(e["out"] * base)))
         colour = ROLE_COLOURS.get(e["role"], "Green")
         rows.append(f'  {{file={_lua(c["file"])}, path={_lua(path_of(c))}, name={_lua(e["clip_name"])}, i={fin}, o={fend - 1}, e={fend}, colour={_lua(colour)}, m={{{md}}}}},')
-    return f"""-- Ingest Sorter - Apply Last Send
+    return f"""-- First Assist - Apply Last Send
 -- Project: {project_name}   Timeline: {timeline_name}
--- Written by Ingest Sorter. Each Send replaces this file.
--- In Resolve: select your media bin and run Workspace > Scripts > Ingest Sorter - Apply Last Send.
+-- Written by First Assist. Each Send replaces this file.
+-- In Resolve: select your media bin and run Workspace > Scripts > First Assist - Apply Last Send.
 -- It also writes the clip metadata (scene, shot type, people, description, keywords, rating...); the CSV is a backup.
 --  1. Finds each clip below in the Media Pool by file name (importing it into the selected bin if it isn't there yet),
 --     renames it, sets its in/out marks, colours it (A-roll Green, B-roll Apricot) and writes its metadata.
@@ -303,7 +304,7 @@ local function findTemplate(folder, wanted)
   for _, item in ipairs(folder:GetClipList() or {{}}) do
     if item:GetClipProperty("Type") == "Timeline" then
       local n = item:GetName()
-      if (wanted ~= "" and n == wanted) or (wanted == "" and not n:find(" %- draft ") and not n:find("^Ingest Sorter")) then
+      if (wanted ~= "" and n == wanted) or (wanted == "" and not n:find(" %- draft ") and not n:find("^First Assist") and not n:find("^Ingest Sorter")) then
         return n, folder
       end
     end
@@ -377,6 +378,9 @@ def install_resolve_script(text):
         path = os.path.join(folder, SCRIPT_NAME)
         with open(path, "w", encoding="utf-8") as f:
             f.write(text)
+        old = os.path.join(folder, OLD_SCRIPT_NAME)   # from before the rename (First Assist)
+        if os.path.isfile(old):
+            os.remove(old)
         return path
     except OSError:
         return ""

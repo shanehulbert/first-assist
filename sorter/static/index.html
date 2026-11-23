@@ -2,17 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Ingest Sorter</title>
+<title>First Assist</title>
+<link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-:root{--appr:#3d7fd9;--ing:#3fae5c;--bg:#141414;--side:#0b0b0c;--panel:#1d1d1d;--panel2:#242424;--line:#2e2e2e;--text:#e8e6e1;--muted:#8d8a83;--accent:#e8873a;--proj:#e8873a;--ppl:#46b866;--set:#4f8fe0;--ok:#5fb37a;--bad:#d06060;--sel:#3a6ea5;--card:210px;--green:#46b866;--yellow:#e2b23a;--red:#d8343f}
+:root{--appr:#3d7fd9;--ing:#3fae5c;--bg:#141414;--side:#0b0b0c;--panel:#1d1d1d;--panel2:#242424;--line:#2e2e2e;--text:#e8e6e1;--muted:#8d8a83;--accent:#e8e6e1;--proj:#e8e6e1;--me:#e8873a;--brand:#9333ea;--wordmark:#a855f7;--ppl:#46b866;--set:#4f8fe0;--ok:#5fb37a;--bad:#d06060;--sel:#3a6ea5;--card:210px;--green:#46b866;--yellow:#e2b23a;--red:#d8343f}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:13px/1.45 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;height:100vh;overflow:hidden}
 .app{display:grid;grid-template-columns:360px minmax(0,1fr) 400px;height:100vh}
 body.wide .app{grid-template-columns:360px minmax(0,1fr)}body.wide .right{display:none}
 .view{display:none;flex-direction:column;min-height:0;flex:1}.view.on{display:flex}
 input,select,textarea,button{font:inherit;color:var(--text);background:var(--panel2);border:1px solid #363636;border-radius:6px;padding:6px 9px}
-input:focus,select:focus,textarea:focus{outline:1px solid var(--accent);border-color:var(--accent)}
+input:focus,select:focus,textarea:focus{outline:1px solid var(--set);border-color:var(--set)}
 button{cursor:pointer;white-space:nowrap}button:hover{border-color:#555}
 button.primary{background:var(--accent);color:#1b1408;border-color:var(--accent);font-weight:700}
 button.link{background:none;border:none;color:var(--accent);padding:0;font-size:11px}
@@ -22,7 +26,8 @@ kbd{font-size:9px;border:1px solid currentColor;border-radius:3px;padding:0 3px;
 .muted{color:var(--muted)}.small{font-size:11px}.full{width:100%}
 /* ---------- sidebar ---------- */
 .side{background:var(--side);border-right:1px solid #222;padding:18px 14px 30px;overflow:auto}
-.wm{font-weight:800;font-size:25px;line-height:1.05;letter-spacing:-.5px;background:linear-gradient(90deg,#d8343f,#e2683a 55%,#e3912e);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block}
+.wm{font-weight:800;font-size:25px;line-height:1.05;letter-spacing:-.5px;color:var(--wordmark);display:inline-block}
+.brand{display:flex;align-items:center;gap:9px}.brand img{width:26px;height:26px;flex:none;display:block}
 .wmsub{font-size:10.5px;color:#77746e;margin-top:3px;letter-spacing:.2px}
 .tagline{color:#a19d95;font-size:12px;margin:8px 0 6px}
 .ttabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));margin:14px -14px 0;border-top:1px solid #222;border-bottom:1px solid #222;position:sticky;top:-18px;background:var(--side);z-index:3}
@@ -35,9 +40,11 @@ kbd{font-size:9px;border:1px solid currentColor;border-radius:3px;padding:0 3px;
 .ttabs button.on[data-tp=send]{border-color:#3fb6a8}.ttabs button.on[data-tp=send] svg{stroke:#3fb6a8}
 .ttabs button.on[data-tp=settings]{border-color:var(--set)}.ttabs button.on[data-tp=settings] svg{stroke:var(--set)}
 .tp{display:none}.tp.on{display:block}
+.quitbox{margin-top:26px;padding-top:14px;border-top:1px solid #222}.quitbox button{width:100%}.quitbox .pm{margin-top:6px;font-size:11.5px;color:var(--muted)}
+.stopped{max-width:520px;margin:18vh auto 0;padding:0 24px;line-height:1.6;color:var(--muted)}.stopped h2{color:var(--text);margin:14px 0 6px;font-size:22px}.stopped img{width:56px;height:56px}
 .tband{margin:0 -14px 10px;padding:9px 18px;font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
 .tband .act{font-size:12px;font-weight:600;cursor:pointer}
-.tband.lib{background:#33220f;color:#f3b47a}.tband.meta{background:#341a2a;color:#f0b3d6}.tband.flt{background:#2b2614;color:#f0d27a}.tband.ai{background:#231c38;color:#cbbcf7}.tband.snd{background:#10302c;color:#8fe0d4}.tband.set{background:#142538;color:#9cc2f0}
+.tband.lib{background:#26262a;color:#e8e6e1}.tband.meta{background:#341a2a;color:#f0b3d6}.tband.flt{background:#2b2614;color:#f0d27a}.tband.ai{background:#231c38;color:#cbbcf7}.tband.snd{background:#10302c;color:#8fe0d4}.tband.set{background:#142538;color:#9cc2f0}
 .tband.lib .act{background:var(--proj);color:#1b1408;border-radius:6px;padding:3px 10px}
 .fsec{border-bottom:1px solid #1f1f1f}.fsh{display:flex;align-items:center;gap:7px;padding:8px 2px;cursor:pointer;user-select:none}
 .fsh .t{font-size:13px;font-weight:700}.fsh .n{font-size:11px;color:var(--muted)}.fsh .ch{color:#c9c6bf;transition:transform .15s;width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center}.fsh .x{margin-left:auto;font-size:11.5px;color:#7fb0ef;cursor:pointer}
@@ -77,19 +84,19 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .sec.proj{color:var(--proj);border-color:var(--proj)}.sec.ppl{color:var(--ppl);border-color:var(--ppl)}.sec.set{color:var(--set);border-color:var(--set)}
 .proj-i{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer;margin-bottom:2px}.proj-i:hover{background:#151517}
 .proj-i .ini{overflow:hidden;flex:0 0 34px;height:34px;border-radius:8px;color:#120c05;font-weight:800;font-size:13px;display:inline-flex;align-items:center;justify-content:center}
-.proj-i .tx{flex:1;min-width:0}.proj-i .nm{display:block;font-size:14px;font-weight:600;color:#e8e6e1;overflow-wrap:anywhere}.proj-i .sb{display:block;font-size:11.5px;color:#9a968e}.proj-i .sb.run{color:var(--accent)}
+.proj-i .tx{flex:1;min-width:0}.proj-i .nm{display:block;font-size:14px;font-weight:600;color:#e8e6e1;overflow-wrap:anywhere}.proj-i .sb{display:block;font-size:11.5px;color:#9a968e}.proj-i .sb.run{color:#b8b5ae}
 .proj-i .ct{font-size:11px;color:#b8b5ae;background:#1d1d1d;border-radius:8px;padding:0 8px}
 .pbar2{display:flex;height:5px;border-radius:3px;overflow:hidden;background:#2a2a2a;margin-top:6px}.pbar2 span{display:block}
 .plabel{font-size:10.5px;font-weight:700;letter-spacing:1.2px;margin:12px 4px 6px}.plabel.open{color:var(--proj)}.plabel.oth{color:#b8b5ae}
 .psearch{display:flex;gap:6px;margin:0 0 4px}.psearch input{flex:1;min-width:0;font-size:12px;padding:5px 8px}.psearch select{font-size:12px;padding:4px 6px}
-.proj-i.on{background:#2a1d10}.proj-i.on .nm{font-weight:800;color:#fff}
+.proj-i.on{background:#26262a}.proj-i.on .nm{font-weight:800;color:#fff}
 .pn{font-weight:600;font-size:13px}.pm{font-size:11px;color:var(--muted);margin-top:1px}
 .sub{margin:6px 0 4px 54px}
 .src{padding:6px 8px;border-radius:6px;background:#141416;margin-bottom:4px;overflow-wrap:anywhere}
-.mtag{display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:9px;margin-left:6px;vertical-align:1px}.mtag.shoot{background:#3a2412;color:#f3b47a}.mtag.archive{background:#11302c;color:#8fe0d4}
+.mtag{display:inline-block;font-size:9.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:9px;margin-left:6px;vertical-align:1px}.mtag.shoot{background:#2e2e32;color:#d6d3cc}.mtag.archive{background:#11302c;color:#8fe0d4}
 .modeseg button b em{font-style:normal;font-weight:400;font-size:12px;color:var(--muted)}
 .mseg2{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px}.mseg2 button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:5px 8px;font-size:12px;border-radius:7px;background:#1a1a1a;border:1px solid #333}
-.mseg2 button span{font-size:10.5px;color:var(--muted)}.mseg2 button.on{border-color:var(--accent);background:var(--accent);color:#1a0f05;font-weight:600}.mseg2 button.on span{color:#3a2310}
+.mseg2 button span{font-size:10.5px;color:var(--muted)}.mseg2 button.on{border-color:var(--accent);background:var(--accent);color:#1a0f05;font-weight:600}.mseg2 button.on span{color:#4a4844}
 .addl{color:var(--proj);font-size:12px;padding:5px 2px;cursor:pointer}.addl.g{color:var(--ppl)}.addl.b{color:var(--set)}
 .ppl-i{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:6px;cursor:pointer}.ppl-i:hover{background:#151517}
 .face{width:28px;height:28px;border-radius:50%;object-fit:cover;background:#2a2f2a;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#9fdcae;flex-shrink:0}
@@ -114,7 +121,7 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 @keyframes pslide{from{transform:translateX(-110%)}to{transform:translateX(370%)}}
 .title .st.done{color:#7fd49a}.title .st.err{color:#f08a8a}
 .title{font-size:19px;font-weight:700;display:flex;align-items:baseline;gap:12px}.tact{margin-left:auto;display:flex;gap:6px}.tact button{font-size:12px;font-weight:600;padding:5px 11px}.tact .ai{background:#2b2140;border-color:#6b4fb3;color:#e6dcff}
-.sw{display:flex;align-items:center;gap:9px;margin:8px 0;cursor:pointer;font-size:12px}.sw .tr{width:32px;height:18px;border-radius:9px;background:#444;position:relative;flex:none;transition:.15s}.sw .tr::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#ddd;transition:.15s}.sw.on .tr{background:var(--sel)}.sw.on .tr::after{left:16px}.title .st{font-size:12px;font-weight:400;color:var(--accent)}
+.sw{display:flex;align-items:center;gap:9px;margin:8px 0;cursor:pointer;font-size:12px}.sw .tr{width:32px;height:18px;border-radius:9px;background:#444;position:relative;flex:none;transition:.15s}.sw .tr::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#ddd;transition:.15s}.sw.on .tr{background:var(--sel)}.sw.on .tr::after{left:16px}.title .st{font-size:12px;font-weight:400;color:#b8b5ae}
 .stats{display:flex;gap:10px;margin-top:10px}.stat{flex:.85;background:var(--panel);border-radius:8px;padding:8px 10px;min-width:0}.stat.wide{flex:1.35}
 .sl{font-size:11px;color:var(--muted)}.sv{font-size:21px;font-weight:700}.sv span{font-size:13px;color:var(--muted);font-weight:500}.sv.ok{color:#7fb2f0}.sv.ing{color:#6fd38a}.sv.bad{color:#d97777}
 .sm{font-size:11px;color:var(--muted);line-height:1.3}.bar{height:4px;background:#333;border-radius:2px;margin-top:7px}.bar i{display:block;height:4px;background:var(--accent);border-radius:2px;transition:width .4s}
@@ -134,7 +141,7 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .dhrow{display:flex;align-items:center;gap:8px}.dhrow .dh{flex:1;min-width:0;overflow-wrap:anywhere}.cpy{flex:none;background:transparent;border:1px solid var(--line);color:inherit;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer}.cpy:hover{border-color:var(--sel)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;position:relative}
 .card.approved{border:2px solid var(--appr)}.card.ingested{border:2px solid var(--ing)}.card.rejected{border:2px solid var(--bad)}
-.card.sel{outline:2px solid #fff;outline-offset:2px}#grid{padding-top:6px;padding-left:22px;padding-right:22px}#fReset{border:1px solid var(--accent);color:#f3b47a}#fReset:hover{background:#33220f}
+.card.sel{outline:2px solid #fff;outline-offset:2px}#grid{padding-top:6px;padding-left:22px;padding-right:22px}#fReset{border:1px solid var(--accent);color:var(--text)}#fReset:hover{background:#2a2a2e}
 .th{position:relative;aspect-ratio:16/9;background:#000}.th img{width:100%;height:100%;object-fit:cover;display:block}
 .scrub{position:absolute;inset:0;display:flex}.scrub i{flex:1}
 .badge{position:absolute;top:6px;left:6px;font-size:10px;padding:1px 7px;border-radius:9px;font-weight:600}
@@ -142,8 +149,8 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .bl{position:absolute;bottom:6px;left:6px;display:flex;gap:4px;align-items:center}.bl span{font-size:10px;padding:1px 6px;border-radius:9px;background:#000b;color:#e8e6e1}.bl span.role{color:#cfe3ff}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}.dot.green{background:var(--green)}.dot.yellow{background:var(--yellow)}.dot.red{background:var(--red)}.dot.done{background:var(--green);box-shadow:0 0 0 2px #0009}
 .dur{position:absolute;top:6px;right:6px;font-size:10px;padding:1px 6px;border-radius:4px;background:#000b;display:flex;gap:5px;align-items:center}
-.b{padding:6px 8px 8px}.cat{font-size:11px;color:var(--accent)}.ttl{font-size:12px;font-weight:600;margin:1px 0}.ppl{font-size:11px;color:#9fdcae}.d{font-size:11px;color:#9a978f;height:31px;overflow:hidden}
-.row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:3px}.stars{color:var(--accent)}
+.b{padding:6px 8px 8px}.cat{font-size:11px;color:#b8b5ae}.cat.me{color:var(--me)}.ttl{font-size:12px;font-weight:600;margin:1px 0}.ppl{font-size:11px;color:#9fdcae}.d{font-size:11px;color:#9a978f;height:31px;overflow:hidden}
+.row{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted);margin-top:3px}.stars{color:var(--me)}
 .empty{color:var(--muted);padding:40px;text-align:center;grid-column:1/-1}
 /* ---------- right ---------- */
 .right{background:#1a1a1a;border-left:1px solid var(--line);overflow:hidden;padding:12px 14px 0;display:flex;flex-direction:column}
@@ -169,7 +176,7 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .tio{font:12px ui-monospace,Menlo,monospace;color:var(--muted);margin-bottom:8px}
 .proj-i .ini img{width:100%;height:100%;object-fit:cover;display:block}
 .dpico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;overflow:hidden;vertical-align:middle;margin-right:8px;color:#120c05;font-weight:800;font-size:11px}.dpico img{width:100%;height:100%;object-fit:cover;display:block}
-.rate span{font-size:20px;cursor:pointer;color:#4a4a4a}.rate span.on{color:var(--accent)}
+.rate span{font-size:20px;cursor:pointer;color:#4a4a4a}.rate span.on{color:var(--me)}
 .fl{font-size:11px;color:var(--muted);margin:10px 0 4px;display:flex;justify-content:space-between;gap:8px}.fl em{font-style:normal;color:#7fb0e6}
 textarea{width:100%;resize:vertical;min-height:52px}textarea.grow{resize:none;overflow:hidden;box-sizing:border-box}
 .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.three select{width:100%;font-size:12px;padding:5px 6px}
@@ -187,10 +194,10 @@ table.meta td:first-child{color:var(--muted);width:34%}table.meta td:last-child{
 .keys{font-size:10.5px;color:var(--muted);margin-top:14px;line-height:1.8}
 /* ---------- vocabulary + people tabs ---------- */
 .page{overflow:auto;padding:16px 22px 30px}
-.xfchip{margin:6px 22px 0;padding:6px 12px;background:#33220f;color:#f3b47a;border-radius:8px;font-size:12.5px;display:flex;align-items:center;gap:10px}.xfchip button{font-size:12px;padding:2px 9px}
+.xfchip{margin:6px 22px 0;padding:6px 12px;background:#26262a;color:#e8e6e1;border-radius:8px;font-size:12.5px;display:flex;align-items:center;gap:10px}.xfchip button{font-size:12px;padding:2px 9px}
 .dash{display:flex;flex-direction:column;gap:14px}.dhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}.dhead h2{margin:0;font-size:20px;font-weight:800}.dhead .pm{font-size:12px}
 .dseg{display:inline-flex;border:1px solid #3a3a3a;border-radius:7px;overflow:hidden}.dseg button{border:0;border-radius:0;background:transparent;font-size:12px;font-weight:600;padding:5px 12px;color:#d6d3cc}.dseg button.on{background:var(--accent);color:#1a0f05}
-.dseg.sm button{font-size:11.5px;font-weight:400;padding:3px 9px}.dseg.sm button.on{background:#3a2a18;color:#f3b47a}
+.dseg.sm button{font-size:11.5px;font-weight:400;padding:3px 9px}.dseg.sm button.on{background:#2e2e32;color:#e8e6e1}
 .dtiles{display:flex;gap:12px;flex-wrap:wrap}.dtile{flex:1;min-width:120px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}.dtile b{display:block;font-size:26px;font-weight:800;letter-spacing:-.5px}.dtile span{font-size:11.5px;color:#a09c94}
 .dcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}.dcard>.h{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap}.dcard>.h h3{margin:0;font-size:14px;font-weight:700}.dcard>.h span.s{font-size:11.5px;color:#a09c94}.dcard>.h .sp{flex:1}
 .dg2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.dg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.dcol{display:flex;flex-direction:column;gap:14px}
@@ -238,7 +245,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 .aist{font-size:11px;margin:4px 0}.aist.ok{color:#7fd49a}.aist.bad{color:#f0a27a}.keyrow{display:flex;gap:4px}.keyrow input{flex:1}
 .opt{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:12.5px}.opt input{margin-top:3px}
 .modeseg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 6px}.modeseg button{text-align:left;display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:10px;background:#1a1a1a;border:1px solid #333;white-space:normal}
-.modeseg button b{font-size:14px}.modeseg button span{font-size:11.5px;color:var(--muted);line-height:1.4}.modeseg button.on{border-color:var(--accent);background:var(--accent);color:#1a0f05}.modeseg button.on span,.modeseg button.on b em{color:#3a2310}
+.modeseg button b{font-size:14px}.modeseg button span{font-size:11.5px;color:var(--muted);line-height:1.4}.modeseg button.on{border-color:var(--accent);background:var(--accent);color:#1a0f05}.modeseg button.on span,.modeseg button.on b em{color:#4a4844}
 .npsrc{display:flex;gap:6px;align-items:center;background:#141416;border-radius:6px;padding:5px 8px;margin-bottom:4px;font-size:12px;overflow-wrap:anywhere}.npsrc button{margin-left:auto;font-size:11px;padding:1px 7px}
 .err{color:#f08a8a;font-size:12px;margin-top:8px;min-height:16px}
 #toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#000e;border:1px solid #444;padding:10px 16px;border-radius:8px;display:none;max-width:70vw;z-index:20}
@@ -247,8 +254,8 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 <body>
 <div class="app">
  <aside class="side">
-  <div class="wm">Ingest Sorter</div>
-  <div class="wmsub">for DaVinci Resolve · v1.10</div>
+  <div class="brand"><img src="/icons/tile.svg" alt=""><div class="wm">First Assist</div></div>
+  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.10</div>
   <div class="tagline">AI sorting &amp; describing your footage</div>
   <nav class="ttabs" aria-label="Tool panels"><button data-tp="library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Library</button><button data-tp="filter"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filter</button><button data-tp="ai"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8zM18 15l.9 2.1 2.1.9-2.1.9L18 21l-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button><button data-tp="meta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01"/></svg>Metadata</button><button data-tp="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6M20 4v16"/></svg>Send</button><button data-tp="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button></nav>
 
@@ -279,7 +286,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
   <div class="tp" id="tp-send">
    <div class="tband snd">Send to Resolve</div>
    <div class="send" id="send"></div>
-   <div class="blk"><h5>In Resolve</h5><ol class="steps"><li>Select your media bin</li><li>Workspace › Scripts › Ingest Sorter - Apply Last Send</li><li>Done: clips, names, marks, colours, metadata and timeline</li></ol></div>
+   <div class="blk"><h5>In Resolve</h5><ol class="steps"><li>Select your media bin</li><li>Workspace › Scripts › First Assist - Apply Last Send</li><li>Done: clips, names, marks, colours, metadata and timeline</li></ol></div>
    <div id="sendSettings"></div>
   </div>
 
@@ -287,6 +294,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
    <div class="tband set">Settings</div>
    <div id="settings"></div>
   </div>
+  <div class="quitbox"><button id="quitBtn">Quit First Assist</button><div class="pm">Stops the app on this Mac. Open it again from the Dock.</div></div>
  </aside>
 
  <section class="main">
@@ -441,7 +449,7 @@ function setTab(t){const wasViewer=document.body.classList.contains('viewer');
     t.textContent=el.dataset.tip;t.style.display='block';const w=t.offsetWidth||160;t.style.left=Math.max(6,Math.min(e.clientX+12,innerWidth-w-8))+'px';t.style.top=(e.clientY+16)+'px'});
   document.addEventListener('scroll',()=>t.style.display='none',true)})();
 let DPID=null,DSCOPE=store.get('fs.dscope','project'),DDAY=store.get('fs.dday','shot'),DASH=null;
-const DC={or:'#e8873a',bl:'#4f8fe0',gr:'#46b866',rd:'#d86a6a',gy:'#5a5a5a',pu:'#f0b3d6',te:'#3fb6a8',ye:'#e2b23a'};
+const DC={or:'#c9c6bf',bl:'#4f8fe0',gr:'#46b866',rd:'#d86a6a',gy:'#5a5a5a',pu:'#f0b3d6',te:'#3fb6a8',ye:'#e2b23a'};
 function dBytes(b){return b>=1e9?(b/1e9).toFixed(1)+' GB':b>=1e6?Math.round(b/1e6)+' MB':b>=1e3?Math.round(b/1e3)+' KB':(b||0)+' B'}
 function dRun(s){s=Math.round(s||0);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}h ${String(m).padStart(2,'0')}m`:m?`${m}m ${String(s%60).padStart(2,'0')}s`:`${s}s`}
 function dDate(d){return d?new Date(d+'T00:00:00').toLocaleDateString([],{day:'numeric',month:'short',year:'numeric'}):''}
@@ -453,7 +461,7 @@ function dChips(items,col,bg){return items.length?`<div class="dchips">${items.m
 function dHeat(days){const keys=Object.keys(days).sort(),word={shot:'shot',added:'added',reviewed:'reviewed'}[DDAY];
   if(!keys.length)return '<div class="pm">No dates recorded yet.'+(DDAY==='reviewed'?' Review dates are counted from v1.10 onwards, so this fills in as you approve and reject clips.':'')+'</div>';
   const W=26,end=new Date(keys[keys.length-1]+'T00:00:00');end.setDate(end.getDate()+(7-end.getDay())%7);const start=new Date(end);start.setDate(end.getDate()-W*7+1);
-  const max=Math.max(...Object.values(days)),sh=['','#6b401a','#9a5a22','#c8742e','#f29a4a'],iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const max=Math.max(...Object.values(days)),sh=['','#34343a','#55555c','#85858c','#c9c6bf'],iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
   let cols='',months='',years='',lastM=-1,lastY=-1,shown=0;
   for(let w=0;w<W;w++){let cells='';const first=new Date(start);first.setDate(start.getDate()+w*7);const last=new Date(first);last.setDate(first.getDate()+6);
     months+=`<span style="flex:0 0 17px;overflow:visible;white-space:nowrap">${last.getMonth()!==lastM?last.toLocaleDateString([],{month:'short'}):''}</span>`;lastM=last.getMonth();
@@ -493,7 +501,7 @@ async function renderDash(){const box=$('#dashView');if(!box.classList.contains(
     ${dCard('Usage breakdown',`${dBytes(appBytes)} of app data in the library folder`,dStack(usage)+`<div class="dfoot"><span><span>Original footage</span> <b>${dBytes(d.footage_mb*1e6)}</b> on your drives, untouched</span></div><div class="pm" style="margin-top:6px">Previews and thumbnails are copies the app makes for fast browsing.</div>`)}
    </div>
    <div class="dg3">
-    ${dCard('Top keywords','in approved clips',dChips(d.keywords||[],'#f3d9a0','#33290f'))}
+    ${dCard('Top keywords','in approved clips',dChips(d.keywords||[],'#e8e6e1','#2a2a2e'))}
     ${dCard('Scenes','approved clips',dChips(d.scenes||[],'#bcd4f5','#132741'))}
     ${dCard('Most seen people','clips each person is in',dBars((d.people||[]).map(x=>[x.name,x.n]),DC.gr))}
    </div>
@@ -517,7 +525,7 @@ async function renderDash(){const box=$('#dashView');if(!box.classList.contains(
 async function loadLib(){
   let ok=false,ver={};try{ver=await api('/api/version');ok=ver.version>=5}catch(e){}
   if(ok&&ver.tools&&(!ver.tools.ffmpeg||!ver.tools.ffprobe))document.body.insertAdjacentHTML('afterbegin',`<div id="toolBanner" style="position:fixed;top:0;left:0;right:0;z-index:30;background:#7a2f2f;color:#fff;padding:10px 16px;font-size:13px;line-height:1.5"><b>ffmpeg isn't installed on this Mac</b>, so new footage can't be read or thumbnailed. Install it once (see the README, or ask Claude), then quit Terminal and relaunch. <button onclick="this.parentNode.remove()" style="margin-left:10px;font-size:11px;padding:2px 8px">Dismiss</button></div>`);
-  if(!ok){document.body.insertAdjacentHTML('afterbegin','<div style="position:fixed;top:0;left:0;right:0;z-index:30;background:#7a2f2f;color:#fff;padding:10px 16px;font-size:13px">This page is connected to an <b>older engine</b>. Quit Terminal (Cmd-Q), then double-click <b>Open Ingest Sorter.command</b> again.</div>');return}
+  if(!ok){document.body.insertAdjacentHTML('afterbegin','<div style="position:fixed;top:0;left:0;right:0;z-index:30;background:#7a2f2f;color:#fff;padding:10px 16px;font-size:13px">This page is connected to an <b>older engine</b>. Quit Terminal (Cmd-Q), then double-click <b>Open First Assist.command</b> again.</div>');return}
   await refreshLib();
   if(!PID&&LIB.projects.length){const saved=store.get('fs.pid',null);await openProject(LIB.projects.some(p=>p.id===saved)?saved:LIB.projects[0].id)}
   else if(!LIB.projects.length){render();renderSide()}
@@ -525,7 +533,7 @@ async function loadLib(){
 async function refreshLib(){LIB=await api('/api/library');OPT=LIB.options;SET=LIB.settings;
   $('#peopleList').innerHTML=LIB.people.map(p=>`<option value="${esc(p.name)}">`).join('');renderSide()}
 function renderSide(){renderProjects();renderPeopleSide();renderSettings()}
-const PCOLS=['#e8873a','#c9a46a','#8fa3b8','#7fb38f','#b08fc9','#d17f8f','#6fb1c9','#c9c26f'];
+const PCOLS=['#9fb4d9','#c9a46a','#8fa3b8','#7fb38f','#b08fc9','#d17f8f','#6fb1c9','#c9c26f'];
 const pcol=id=>{let h=0;for(const ch of id)h=(h*31+ch.charCodeAt(0))>>>0;return PCOLS[h%PCOLS.length]};
 function projRow(x,on){const c=x.counts||{},st=x.status||{},run=st.state==='running';
   const sub=run?`${st.stage||'Processing'}${st.total?` ${st.done} of ${st.total}`:''}…`
@@ -538,14 +546,14 @@ function renderProjects(){const p=proj(),q=($('#projQ').value||'').trim().toLowe
   const others=LIB.projects.filter(x=>x.id!==PID&&(!q||x.name.toLowerCase().includes(q)))
     .sort((a,b)=>{if(sort==='az')return a.name.localeCompare(b.name);const t=x=>Date.parse(opened[x.id]||x.created||0)||0;return t(b)-t(a)});
   $('#projects').innerHTML=!LIB.projects.length?'<div class="pm" style="padding:0 10px">No projects yet. Click + New project.</div>':
-    (p?`<div class="plabel open">OPEN PROJECT</div>${projRow(p,true)}<div class="sub">${p.mode?`<div class="small" style="margin-bottom:6px;color:${p.mode==='archive'?'#8fe0d4':'#f3b47a'}">${p.mode==='archive'?'Linked Media · leaves footage in place':'Managed Media · moves selects to 01_Selects'}</div>`:''}<div class="pm" style="margin-bottom:4px">${p.mode==='shoot'?'Rushes folder':'Footage folders'}</div>${p.sources.map(s=>`<div class="src"><div class="pn" style="font-size:12px">${esc(s.split('/').pop())}</div><div class="pm">${esc(s)}</div></div>`).join('')}
+    (p?`<div class="plabel open">OPEN PROJECT</div>${projRow(p,true)}<div class="sub">${p.mode?`<div class="small" style="margin-bottom:6px;color:${p.mode==='archive'?'#8fe0d4':'#d6d3cc'}">${p.mode==='archive'?'Linked Media · leaves footage in place':'Managed Media · moves selects to 01_Selects'}</div>`:''}<div class="pm" style="margin-bottom:4px">${p.mode==='shoot'?'Rushes folder':'Footage folders'}</div>${p.sources.map(s=>`<div class="src"><div class="pn" style="font-size:12px">${esc(s.split('/').pop())}</div><div class="pm">${esc(s)}</div></div>`).join('')}
        <div class="addl" id="addSrc">+ Add footage folder</div><div class="addl" id="rescan">↻ Check for new clips</div><div class="addl" id="renProj">✎ Rename project…</div>
        <div class="pm" style="margin:8px 0 4px">Send mode</div><div class="mseg2" id="modeSw"><button data-m="shoot" class="${p.mode==='shoot'?'on':''}">Managed<span>moves selects</span></button><button data-m="archive" class="${p.mode==='archive'?'on':''}">Linked<span>leaves in place</span></button></div><div class="addl" id="rmProj" style="color:#e07a7a">✕ Remove project…</div></div>`:'')+
     (LIB.projects.length>1?`<div class="plabel oth">OTHER PROJECTS · ${LIB.projects.length-1}</div>${others.map(x=>projRow(x,false)).join('')||'<div class="pm" style="padding:0 10px">No projects match that search.</div>'}`:'');
   const a=$('#addSrc');if(a)a.onclick=async e=>{e.stopPropagation();const path=await chooseFolder('Add a footage folder to this project');if(!path)return;
     const res=await api(`/api/p/${PID}/update`,{add_source:path});if(res.error)return toast(esc(res.error));await refreshAll();startPoll()};
   const rm=$('#rmProj');if(rm)rm.onclick=async e=>{e.stopPropagation();const p=proj();
-    if(!confirm(`Remove “${p.name}” from Ingest Sorter?\n\nThis removes its catalogue, thumbnails, previews, tags and review decisions from the app. Your footage is NOT touched: nothing in the source or destination folders is moved or deleted.\n\nThe project's data goes to the “_removed projects” folder inside the library, so it can be recovered.`))return;
+    if(!confirm(`Remove “${p.name}” from First Assist?\n\nThis removes its catalogue, thumbnails, previews, tags and review decisions from the app. Your footage is NOT touched: nothing in the source or destination folders is moved or deleted.\n\nThe project's data goes to the “_removed projects” folder inside the library, so it can be recovered.`))return;
     const res=await api(`/api/p/${PID}/remove`,{});if(res.error)return toast(esc(res.error));
     toast(`Removed “${esc(res.name)}”. Your footage wasn't touched.`);PID=null;SEL=null;CAT={clips:{}};await refreshLib();
     if(LIB.projects.length)await openProject(LIB.projects[0].id);else{render();renderSend();renderSide();$('#detail').className='detail none';$('#detail').innerHTML='Select a clip'}};
@@ -587,8 +595,19 @@ function setProgress(s){const bar=$('#pprog'),st=$('#pstatus');
   bar.className='pprog';
   if(s.state==='error'){st.className='st err';st.innerHTML=esc('Problem: '+(s.message||'something went wrong'))+' <button class="link" id="stX">dismiss</button>';$('#stX').onclick=()=>setProgress(null);return}
   st.className='st done';st.innerHTML='✓ '+esc(s.message||'Done');clearTimeout(doneT);doneT=setTimeout(()=>{if(!wasRun)setProgress(null)},8000)}
+let STOPPED=false;
+function showStopped(byQuit){if(STOPPED)return;STOPPED=true;clearInterval(poll);
+  document.body.innerHTML=`<div class="stopped"><img src="/icons/apple-touch-icon.png" alt="" onerror="this.remove()"><h2>First Assist has stopped.</h2>
+    ${byQuit?'You quit it.':'It isn’t answering: it may have been quit or closed.'} Open it again from the Dock (or with <b>Open First Assist.command</b>), then this page carries on by itself.</div>`;
+  const back=async()=>{try{const r=await fetch('/api/version',{cache:'no-store'});if(r.ok)return location.reload()}catch(e){}setTimeout(back,3000)};setTimeout(back,3000)}
+$('#quitBtn').onclick=async()=>{
+  if(!confirm('Quit First Assist?\n\nIt stops on this Mac until you open it again.'))return;
+  let busy=[];try{const L2=await api('/api/library');busy=L2.projects.filter(p=>p.status&&p.status.state==='running').map(p=>`“${p.name}” (${(p.status.stage||'working').toLowerCase()})`)}catch(e){}
+  if(busy.length&&!confirm(`Still working on ${busy.join(', ')}. Quit anyway?\n\nWhatever is running stops part-way and can be run again later. A Send or move that has started always finishes first.`))return;
+  try{await fetch('/api/quit',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})}catch(e){}
+  showStopped(true)};
 function startPoll(){clearInterval(poll);lastKey=null;wasRun=false;clearTimeout(doneT);setProgress(null);
-  poll=setInterval(async()=>{if(!PID)return;const pid=PID,s=await api(`/api/p/${pid}/status`);if(pid!==PID)return;
+  poll=setInterval(async()=>{if(!PID||STOPPED)return;const pid=PID;let s;try{s=await api(`/api/p/${pid}/status`)}catch(e){return showStopped(false)}if(pid!==PID)return;
   const run=s.state==='running';
   if(run){wasRun=true;clearTimeout(doneT);setProgress(s)}
   else if(s.state==='error'){if(wasRun||lastKey===null)setProgress(s);wasRun=false}
@@ -879,7 +898,7 @@ function render(){
      ${c.review.status!=='unreviewed'?`<span class="badge ${vstat(c)}">${vstat(c)==='ingested'?sentWord():c.review.status}</span>`:''}${c.offline?'<span class="badge offline" title="The file can\'t be found right now">missing</span>':''}
      <div class="bl">${role(c)?`<span class="role">${esc(role(c))}</span>`:''}${sh?`<span>${esc(sh)}</span>`:''}</div>
      <span class="dur">${dot}${c.meta.duration.toFixed(1)}s</span></div>
-     <div class="b"><div class="cat">${esc(eff(c,'scene')||'No scene yet')}</div><div class="ttl">${esc(eff(c,'title')||c.file)}</div>${pn.length?`<div class="ppl">${pn.map(esc).join(', ')}</div>`:''}<div class="d">${esc(eff(c,'description'))}</div>
+     <div class="b"><div class="cat${c.review.scene?' me':''}">${esc(eff(c,'scene')||'No scene yet')}</div><div class="ttl">${esc(eff(c,'title')||c.file)}</div>${pn.length?`<div class="ppl">${pn.map(esc).join(', ')}</div>`:''}<div class="d">${esc(eff(c,'description'))}</div>
      <div class="row"><span>${esc((/(C\d{3,4})$/.exec(c.id)||[])[1]||c.file)}${camLens(c)?' · '+esc(camLens(c).replace(/^.* (\d+mm)$/,'$1')):''}</span><span class="stars">${'★'.repeat(c.review.rating||0)}</span></div></div></div>`}).join('')
     ||(total?'<div class="empty">No clips match these filters.</div>':`<div class="empty">${p?'No clips yet. Processing will fill this in.':'Create a project to begin: + New, under Projects.'}</div>`);
   g.scrollTop=st;
@@ -901,7 +920,7 @@ function renderSend(){const p=proj();if(!p){$('#send').innerHTML='<div class="mu
   const arch=p.mode==='archive',todo=ap.length-moved,short=x=>x?esc(x.split('/').slice(-3).join('/')):'';
   const rdir=p.resolve_dir||(p.destination?p.destination+'/_Resolve import':'');
   $('#send').innerHTML=`
-   <div class="small" style="margin-bottom:4px;color:${arch?'#8fe0d4':'#f3b47a'}">${arch?'Linked Media · leaves footage in place':'Managed Media · moves selects to 01_Selects'}</div>
+   <div class="small" style="margin-bottom:4px;color:${arch?'#8fe0d4':'#d6d3cc'}">${arch?'Linked Media · leaves footage in place':'Managed Media · moves selects to 01_Selects'}</div>
    <div class="small muted">${arch?`${ap.length} approved`:`${todo} approved to send${moved?` · ${moved} already in 01_Selects`:''}`} · ${ap.length-broll} A-roll, ${broll} B-roll · ${hms(apRuntime(ap))}</div>
    ${need?`<div class="small" style="color:#f0c64e;margin-top:3px"><span class="dot yellow"></span> ${need} with unconfirmed camera movement <button class="link" id="showNeed">Show them</button></div>`:''}
    <div class="sendrow" style="margin-top:7px"><button class="primary" id="sendBtn">${arch?`Send ${ap.length} select${ap.length===1?'':'s'} to Resolve`:p.mode==='shoot'&&todo?`Move ${todo} select${todo===1?'':'s'} to 01_Selects`:'Send approved to Resolve'}</button></div>
@@ -914,7 +933,7 @@ function renderSend(){const p=proj();if(!p){$('#send').innerHTML='<div class="mu
   $('#sendBtn').onclick=async()=>{if(!arch&&!p.destination)return toast('Choose a destination folder first.');if(!ap.length)return toast('No approved clips yet.');
     if(!confirm(arch?`Send ${ap.length} approved clip${ap.length===1?'':'s'} to Resolve?\n\nNothing is moved. The Resolve files are written to\n${rdir||'the app library'}`:todo?`Move ${todo} approved clip${todo===1?'':'s'} to\n${p.destination}\n\nand write the Resolve import files? You can undo this afterwards.`:'All approved clips are already in the destination. Rewrite the Resolve import files?'))return;
     const b=$('#sendBtn');b.textContent=arch?'Writing files…':'Moving clips…';b.disabled=true;const r=await api(`/api/p/${PID}/send`,{});await refreshAll();
-    if(r.error)return toast(esc(r.error));toast((r.archive?`Sent ${r.approved} select${r.approved===1?'':'s'}. Nothing was moved.`:`Moved ${r.moved} clip${r.moved===1?'':'s'} to 01_Selects.`)+` The Resolve files are in “_Resolve Import”.`+(r.files&&r.files.script_installed?'<br>In Resolve: select your media bin, run <b>Workspace › Scripts › Ingest Sorter - Apply Last Send</b>. It imports the clips and writes their metadata.':'')+(r.errors.length?`<br>${r.errors.map(esc).join('<br>')}`:''),8000)};
+    if(r.error)return toast(esc(r.error));toast((r.archive?`Sent ${r.approved} select${r.approved===1?'':'s'}. Nothing was moved.`:`Moved ${r.moved} clip${r.moved===1?'':'s'} to 01_Selects.`)+` The Resolve files are in “_Resolve Import”.`+(r.files&&r.files.script_installed?'<br>In Resolve: select your media bin, run <b>Workspace › Scripts › First Assist - Apply Last Send</b>. It imports the clips and writes their metadata.':'')+(r.errors.length?`<br>${r.errors.map(esc).join('<br>')}`:''),8000)};
   $('#testExp').onclick=async()=>{const r=await api(`/api/p/${PID}/test-export`,{});if(r.error)return toast(esc(r.error));
     const sh=await api('/api/reveal',{path:r.files.metadata});toast(sh.ok?'Test export written and shown in Finder. Nothing was moved.':'Test export written to:<br><code>'+esc(r.folder)+'</code>',8000)};
   const sf=$('#showF');if(sf)sf.onclick=async()=>{const r=await api('/api/reveal',{path:last.files.folder});if(!r.ok)toast(esc(last.files.folder),8000)};

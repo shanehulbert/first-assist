@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ingest Sorter - ingest.
+"""First Assist - ingest.
 
 Reads every video in a source folder, records technical metadata, pulls
 thumbnails and (optionally) small H.264 preview proxies, and writes/updates a

@@ -1,4 +1,4 @@
--- Ingest Sorter - Save Test.lua
+-- First Assist - Save Test.lua
 -- On the FIRST clip in the current bin: removes the test tags from its name,
 -- sets in/out marks (frames 24 to 72), then saves the project.
 local r = resolve or (Resolve and Resolve()) or (app and app:GetResolve())

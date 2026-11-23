@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ingest Sorter - local review app (v2).
+"""First Assist - local review app (v2).
 
     python3 server.py [--port 8765] [--no-browser]
 
@@ -101,9 +101,14 @@ class Handler(BaseHTTPRequestHandler):
         p = unquote(urlparse(self.path).path)
         if p in ("/", "/index.html"):
             return self.send_file(os.path.join(HERE, "static", "index.html"))
+        if p == "/favicon.ico":
+            return self.send_file(os.path.join(HERE, "static", "icons", "favicon-32.png"))
+        m = re.fullmatch(r"/icons/([\w-]+\.(?:svg|png))", p)
+        if m:
+            return self.send_file(os.path.join(HERE, "static", "icons", m.group(1)))
         if p == "/api/version":
             from ingest import tools
-            return self.send_json({"app": "footage-sorter", "version": 5, "release": "1.10", "tools": tools()})
+            return self.send_json({"app": "first-assist", "version": 5, "release": RELEASE, "tools": tools()})
         if p == "/api/library":
             lib = L.load_lib()
             for pr in lib["projects"]:
@@ -172,10 +177,28 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
     def do_POST(self):
+        with BUSY_LOCK:
+            BUSY[0] += 1
+        try:
+            return self._post()
+        finally:
+            with BUSY_LOCK:
+                BUSY[0] -= 1
+
+    def _post(self):
         p = urlparse(self.path).path
         n = int(self.headers.get("Content-Length", 0))
         data = json.loads(self.rfile.read(n) or b"{}")
 
+        # ----- Quit (the button at the foot of the sidebar) -----
+        if p == "/api/quit":
+            origin = self.headers.get("Origin") or ""
+            if origin and not re.fullmatch(r"https?://(localhost|127\.0\.0\.1)(:\d+)?", origin):
+                return self.send_json({"error": "Quit only works from First Assist's own page."}, 403)
+            self.send_json({"ok": True})
+            if SERVER:
+                threading.Timer(0.3, SERVER.shutdown).start()
+            return None
         if p == "/api/choose-folder":
             return self.send_json({"path": mac_choose_folder(data.get("prompt", "Choose a folder"))})
         if p == "/api/reveal":
@@ -352,6 +375,12 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
+RELEASE = "1.10"
+SERVER = None            # set in main(), so Quit can stop it
+BUSY = [0]               # POST requests in progress (Send and friends move files inside one)
+BUSY_LOCK = threading.Lock()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8765)
@@ -365,23 +394,40 @@ def main():
     for pr in L.load_lib()["projects"]:
         L.start_ingest(pr["id"])
     server = None
-    for port in range(a.port, a.port + 10):
+    # 8766 is Keyword Generator's port (its Lightroom plug-in only talks to 8766), so never fall back onto it.
+    for port in [n for n in range(a.port, a.port + 10) if n != 8766 or a.port == 8766]:
         try:
             server = QuietServer(("127.0.0.1", port), Handler)
             break
         except OSError:
             if port == a.port:
-                print(f"Port {port} is busy - probably an older Ingest Sorter still running in another "
+                print(f"Port {port} is busy - probably an older First Assist still running in another "
                       "Terminal window. You can close that window. Using the next free port instead.")
     if not server:
-        sys.exit("Couldn't find a free port. Close other Ingest Sorter windows and try again.")
+        sys.exit("Couldn't find a free port. Close other First Assist windows and try again.")
     url = f"http://localhost:{server.server_address[1]}"
-    print(f"Ingest Sorter v1.5 running at {url}")
+    print(f"First Assist v{RELEASE} running at {url}")
     print(f"Library: {L.LIB}")
     print("Leave this window open while you work. Press Ctrl-C to stop.")
     if not a.no_browser:
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()
+    global SERVER
+    SERVER = server
     server.serve_forever()
+    # Quit was pressed. Never stop half-way through moving files: wait for any Send, Undo, Move back
+    # or New project that is still running (each saves the catalogue when it's done).
+    import time
+    waited = False
+    while True:
+        with BUSY_LOCK:
+            if BUSY[0] <= 0:
+                break
+        if not waited:
+            print("Quit: waiting for a Send or move to finish first…")
+            waited = True
+        time.sleep(0.2)
+    server.server_close()
+    print("First Assist has stopped.")
 
 
 if __name__ == "__main__":
