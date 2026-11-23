@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ingest Sorter - check that everything it needs is installed, and say how to fix what isn't."""
+"""First Assist - check that everything it needs is installed, and say how to fix what isn't."""
 import json, os, shutil, sys, urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -14,7 +14,7 @@ def line(state, name, detail="", fix=""):
             print(f"             {f}")
 
 
-print("\nIngest Sorter - setup check\n" + "-" * 28)
+print("\nFirst Assist - setup check\n" + "-" * 28)
 
 # Needed
 v = sys.version_info
@@ -39,7 +39,7 @@ for tool in ("ffmpeg", "ffprobe"):
 
 resolve_dir = os.path.expanduser("~/Library/Application Support/Blackmagic Design/DaVinci Resolve")
 if sys.platform != "darwin":
-    line(NO, "macOS", "Ingest Sorter has only been built and tested on a Mac")
+    line(NO, "macOS", "First Assist has only been built and tested on a Mac")
 elif os.path.isdir(resolve_dir):
     line(OK, "DaVinci Resolve", "found (free or Studio both work)")
 else:
@@ -75,6 +75,6 @@ print("\n" + "-" * 28)
 if needed_missing:
     print("Not ready yet. Install: " + ", ".join(needed_missing) + ". Then run this check again.")
 else:
-    print('Ready. Double-click "Open Ingest Sorter.command" to start.')
+    print('Ready. Double-click "Open First Assist.command" to start.')
     print("Anything marked optional can be added later.")
 print()

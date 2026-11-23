@@ -1,4 +1,4 @@
--- Ingest Sorter - Test.lua
+-- First Assist - Test.lua
 -- Checks whether this copy of DaVinci Resolve lets a script rename Media Pool clips
 -- and set their in/out marks. Run it from Workspace > Scripts.
 --
@@ -6,7 +6,7 @@
 -- Second run: puts the name back and clears the marks.
 -- Results are printed in Workspace > Console (Lua tab).
 
-local function say(s) print("[Ingest Sorter test] " .. s) end
+local function say(s) print("[First Assist test] " .. s) end
 
 local r = resolve or (Resolve and Resolve()) or (app and app:GetResolve())
 if not r then say("FAIL - couldn't reach Resolve from this script.") return end

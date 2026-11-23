@@ -1,4 +1,6 @@
-# Ingest Sorter for DaVinci Resolve
+# First Assist
+
+**AI logging and selects for DaVinci Resolve.**
 
 Sort, tag, rate and approve your footage **before** it goes into an edit. Then send the selects to DaVinci Resolve in one step: clips imported, named, marked, coloured and tagged, on a draft timeline.
 
@@ -23,17 +25,17 @@ Your original files are never renamed or deleted.
 
 Allow about 15 minutes. You'll paste a few commands into **Terminal** (find it with Spotlight: press Cmd-Space and type "Terminal"). Paste each command and press Return.
 
-### 1. Download Ingest Sorter
+### 1. Download First Assist
 
 1. On this page, click the green **Code** button, then **Download ZIP**.
 2. Unzip it.
-3. Make a folder to hold it, for example `Movies/Ingest Sorter`, and move the unzipped folder inside.
+3. Make a folder to hold it, for example `Movies/First Assist`, and move the unzipped folder inside.
 
 The app keeps its own data (projects, thumbnails, previews) in a folder called `library`, which it creates **beside** the app folder. That's why it needs a parent folder of its own:
 
 ```
-Movies/Ingest Sorter/
-├── ingest-sorter-main/     ← the app (the folder you unzipped; its name may differ)
+Movies/First Assist/
+├── first-assist-main/      ← the app (the folder you unzipped; its name may differ)
 └── library/                ← created on first run: your projects and previews
 ```
 
@@ -81,7 +83,7 @@ Double-click **Check Setup.command** in the app folder. It lists what's installe
 
 ### 7. Start the app
 
-Double-click **Open Ingest Sorter.command** (same right-click **Open** the first time). A Terminal window opens and the app appears in your browser at `http://localhost:8765`.
+Double-click **Open First Assist.command** (same right-click **Open** the first time). A Terminal window opens and the app appears in your browser at `http://localhost:8765`.
 
 - **Keep the Terminal window open** while you work. It is the app.
 - To quit, close that Terminal window.
@@ -138,7 +140,7 @@ You can rename a project or switch its mode later in the **Library** panel. If y
 
 1. In the **Send** panel, press the Send button. This writes a script for Resolve. For Managed Media projects it also moves the selects.
 2. In Resolve, open your project and click the bin you want the clips in.
-3. Choose **Workspace › Scripts › Ingest Sorter - Apply Last Send**.
+3. Choose **Workspace › Scripts › First Assist - Apply Last Send**.
 
 The script:
 

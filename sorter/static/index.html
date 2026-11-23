@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Ingest Sorter</title>
+<title>First Assist</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 :root{--appr:#3d7fd9;--ing:#3fae5c;--bg:#141414;--side:#0b0b0c;--panel:#1d1d1d;--panel2:#242424;--line:#2e2e2e;--text:#e8e6e1;--muted:#8d8a83;--accent:#e8873a;--proj:#e8873a;--ppl:#46b866;--set:#4f8fe0;--ok:#5fb37a;--bad:#d06060;--sel:#3a6ea5;--card:210px;--green:#46b866;--yellow:#e2b23a;--red:#d8343f}
@@ -247,8 +247,8 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 <body>
 <div class="app">
  <aside class="side">
-  <div class="wm">Ingest Sorter</div>
-  <div class="wmsub">for DaVinci Resolve · v1.10</div>
+  <div class="wm">First Assist</div>
+  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.10</div>
   <div class="tagline">AI sorting &amp; describing your footage</div>
   <nav class="ttabs" aria-label="Tool panels"><button data-tp="library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Library</button><button data-tp="filter"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filter</button><button data-tp="ai"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8zM18 15l.9 2.1 2.1.9-2.1.9L18 21l-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button><button data-tp="meta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01"/></svg>Metadata</button><button data-tp="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6M20 4v16"/></svg>Send</button><button data-tp="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button></nav>
 
@@ -279,7 +279,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
   <div class="tp" id="tp-send">
    <div class="tband snd">Send to Resolve</div>
    <div class="send" id="send"></div>
-   <div class="blk"><h5>In Resolve</h5><ol class="steps"><li>Select your media bin</li><li>Workspace › Scripts › Ingest Sorter - Apply Last Send</li><li>Done: clips, names, marks, colours, metadata and timeline</li></ol></div>
+   <div class="blk"><h5>In Resolve</h5><ol class="steps"><li>Select your media bin</li><li>Workspace › Scripts › First Assist - Apply Last Send</li><li>Done: clips, names, marks, colours, metadata and timeline</li></ol></div>
    <div id="sendSettings"></div>
   </div>
 
@@ -517,7 +517,7 @@ async function renderDash(){const box=$('#dashView');if(!box.classList.contains(
 async function loadLib(){
   let ok=false,ver={};try{ver=await api('/api/version');ok=ver.version>=5}catch(e){}
   if(ok&&ver.tools&&(!ver.tools.ffmpeg||!ver.tools.ffprobe))document.body.insertAdjacentHTML('afterbegin',`<div id="toolBanner" style="position:fixed;top:0;left:0;right:0;z-index:30;background:#7a2f2f;color:#fff;padding:10px 16px;font-size:13px;line-height:1.5"><b>ffmpeg isn't installed on this Mac</b>, so new footage can't be read or thumbnailed. Install it once (see the README, or ask Claude), then quit Terminal and relaunch. <button onclick="this.parentNode.remove()" style="margin-left:10px;font-size:11px;padding:2px 8px">Dismiss</button></div>`);
-  if(!ok){document.body.insertAdjacentHTML('afterbegin','<div style="position:fixed;top:0;left:0;right:0;z-index:30;background:#7a2f2f;color:#fff;padding:10px 16px;font-size:13px">This page is connected to an <b>older engine</b>. Quit Terminal (Cmd-Q), then double-click <b>Open Ingest Sorter.command</b> again.</div>');return}
+  if(!ok){document.body.insertAdjacentHTML('afterbegin','<div style="position:fixed;top:0;left:0;right:0;z-index:30;background:#7a2f2f;color:#fff;padding:10px 16px;font-size:13px">This page is connected to an <b>older engine</b>. Quit Terminal (Cmd-Q), then double-click <b>Open First Assist.command</b> again.</div>');return}
   await refreshLib();
   if(!PID&&LIB.projects.length){const saved=store.get('fs.pid',null);await openProject(LIB.projects.some(p=>p.id===saved)?saved:LIB.projects[0].id)}
   else if(!LIB.projects.length){render();renderSide()}
@@ -545,7 +545,7 @@ function renderProjects(){const p=proj(),q=($('#projQ').value||'').trim().toLowe
   const a=$('#addSrc');if(a)a.onclick=async e=>{e.stopPropagation();const path=await chooseFolder('Add a footage folder to this project');if(!path)return;
     const res=await api(`/api/p/${PID}/update`,{add_source:path});if(res.error)return toast(esc(res.error));await refreshAll();startPoll()};
   const rm=$('#rmProj');if(rm)rm.onclick=async e=>{e.stopPropagation();const p=proj();
-    if(!confirm(`Remove “${p.name}” from Ingest Sorter?\n\nThis removes its catalogue, thumbnails, previews, tags and review decisions from the app. Your footage is NOT touched: nothing in the source or destination folders is moved or deleted.\n\nThe project's data goes to the “_removed projects” folder inside the library, so it can be recovered.`))return;
+    if(!confirm(`Remove “${p.name}” from First Assist?\n\nThis removes its catalogue, thumbnails, previews, tags and review decisions from the app. Your footage is NOT touched: nothing in the source or destination folders is moved or deleted.\n\nThe project's data goes to the “_removed projects” folder inside the library, so it can be recovered.`))return;
     const res=await api(`/api/p/${PID}/remove`,{});if(res.error)return toast(esc(res.error));
     toast(`Removed “${esc(res.name)}”. Your footage wasn't touched.`);PID=null;SEL=null;CAT={clips:{}};await refreshLib();
     if(LIB.projects.length)await openProject(LIB.projects[0].id);else{render();renderSend();renderSide();$('#detail').className='detail none';$('#detail').innerHTML='Select a clip'}};
@@ -914,7 +914,7 @@ function renderSend(){const p=proj();if(!p){$('#send').innerHTML='<div class="mu
   $('#sendBtn').onclick=async()=>{if(!arch&&!p.destination)return toast('Choose a destination folder first.');if(!ap.length)return toast('No approved clips yet.');
     if(!confirm(arch?`Send ${ap.length} approved clip${ap.length===1?'':'s'} to Resolve?\n\nNothing is moved. The Resolve files are written to\n${rdir||'the app library'}`:todo?`Move ${todo} approved clip${todo===1?'':'s'} to\n${p.destination}\n\nand write the Resolve import files? You can undo this afterwards.`:'All approved clips are already in the destination. Rewrite the Resolve import files?'))return;
     const b=$('#sendBtn');b.textContent=arch?'Writing files…':'Moving clips…';b.disabled=true;const r=await api(`/api/p/${PID}/send`,{});await refreshAll();
-    if(r.error)return toast(esc(r.error));toast((r.archive?`Sent ${r.approved} select${r.approved===1?'':'s'}. Nothing was moved.`:`Moved ${r.moved} clip${r.moved===1?'':'s'} to 01_Selects.`)+` The Resolve files are in “_Resolve Import”.`+(r.files&&r.files.script_installed?'<br>In Resolve: select your media bin, run <b>Workspace › Scripts › Ingest Sorter - Apply Last Send</b>. It imports the clips and writes their metadata.':'')+(r.errors.length?`<br>${r.errors.map(esc).join('<br>')}`:''),8000)};
+    if(r.error)return toast(esc(r.error));toast((r.archive?`Sent ${r.approved} select${r.approved===1?'':'s'}. Nothing was moved.`:`Moved ${r.moved} clip${r.moved===1?'':'s'} to 01_Selects.`)+` The Resolve files are in “_Resolve Import”.`+(r.files&&r.files.script_installed?'<br>In Resolve: select your media bin, run <b>Workspace › Scripts › First Assist - Apply Last Send</b>. It imports the clips and writes their metadata.':'')+(r.errors.length?`<br>${r.errors.map(esc).join('<br>')}`:''),8000)};
   $('#testExp').onclick=async()=>{const r=await api(`/api/p/${PID}/test-export`,{});if(r.error)return toast(esc(r.error));
     const sh=await api('/api/reveal',{path:r.files.metadata});toast(sh.ok?'Test export written and shown in Finder. Nothing was moved.':'Test export written to:<br><code>'+esc(r.folder)+'</code>',8000)};
   const sf=$('#showF');if(sf)sf.onclick=async()=>{const r=await api('/api/reveal',{path:last.files.folder});if(!r.ok)toast(esc(last.files.folder),8000)};

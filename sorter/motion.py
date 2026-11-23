@@ -1,4 +1,4 @@
-"""Ingest Sorter - measured camera movement.
+"""First Assist - measured camera movement.
 
 Tracks feature points between frames (optical flow) and fits the overall
 image motion: sideways drift = pan, vertical = tilt, the image growing =

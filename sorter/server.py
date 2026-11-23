@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Ingest Sorter - local review app (v2).
+"""First Assist - local review app (v2).
 
     python3 server.py [--port 8765] [--no-browser]
 
@@ -103,7 +103,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.send_file(os.path.join(HERE, "static", "index.html"))
         if p == "/api/version":
             from ingest import tools
-            return self.send_json({"app": "footage-sorter", "version": 5, "release": "1.10", "tools": tools()})
+            return self.send_json({"app": "first-assist", "version": 5, "release": RELEASE, "tools": tools()})
         if p == "/api/library":
             lib = L.load_lib()
             for pr in lib["projects"]:
@@ -352,6 +352,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
+RELEASE = "1.10"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8765)
@@ -371,12 +374,12 @@ def main():
             break
         except OSError:
             if port == a.port:
-                print(f"Port {port} is busy - probably an older Ingest Sorter still running in another "
+                print(f"Port {port} is busy - probably an older First Assist still running in another "
                       "Terminal window. You can close that window. Using the next free port instead.")
     if not server:
-        sys.exit("Couldn't find a free port. Close other Ingest Sorter windows and try again.")
+        sys.exit("Couldn't find a free port. Close other First Assist windows and try again.")
     url = f"http://localhost:{server.server_address[1]}"
-    print(f"Ingest Sorter v1.5 running at {url}")
+    print(f"First Assist v{RELEASE} running at {url}")
     print(f"Library: {L.LIB}")
     print("Leave this window open while you work. Press Ctrl-C to stop.")
     if not a.no_browser:

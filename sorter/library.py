@@ -1,7 +1,7 @@
-"""Ingest Sorter - the library: projects, master term list, ingest, location
+"""First Assist - the library: projects, master term list, ingest, location
 lookup, and the verified move to a destination folder.
 
-Layout on disk (next to the footage-sorter code folder):
+Layout on disk (next to the first-assist code folder):
     library/library.json            projects + master term list
     library/geocache.json           GPS -> place name lookups (one per location)
     library/projects/<id>/catalogue.json, thumbs/, proxies/, moves.json

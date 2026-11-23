@@ -1,4 +1,4 @@
-"""Ingest Sorter - people recognition (runs entirely on this Mac).
+"""First Assist - people recognition (runs entirely on this Mac).
 
 Finds faces in a few frames of each clip (OpenCV YuNet), turns each face into a
 "faceprint" (OpenCV SFace, 128 numbers), then:

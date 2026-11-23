@@ -1,6 +1,6 @@
--- Ingest Sorter - Template Test.lua
+-- First Assist - Template Test.lua
 -- 1. Finds the first timeline in Master > 00_Timelines > 00.01_Working (your template).
--- 2. Duplicates it as "Ingest Sorter Test - from <template name>" in that same bin.
+-- 2. Duplicates it as "First Assist Test - from <template name>" in that same bin.
 -- 3. Appends the first clip of the bin you had selected onto V1, trimmed to 1s - 3s, coloured Apricot.
 -- Results show on screen (no Console needed):
 --   no new timeline        -> duplicating failed
@@ -36,7 +36,7 @@ end
 if not template then return end
 
 pool:SetCurrentFolder(tlFolder)
-local copy = template:DuplicateTimeline("Ingest Sorter Test - from " .. templateName)
+local copy = template:DuplicateTimeline("First Assist Test - from " .. templateName)
 if not copy then return end
 project:SetCurrentTimeline(copy)
 

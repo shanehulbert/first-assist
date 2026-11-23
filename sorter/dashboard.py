@@ -1,4 +1,4 @@
-"""Ingest Sorter - numbers for the Dashboard tab (one project, or the whole library)."""
+"""First Assist - numbers for the Dashboard tab (one project, or the whole library)."""
 import os
 from collections import Counter
 

@@ -1,4 +1,4 @@
-"""Ingest Sorter - AI describer.
+"""First Assist - AI describer.
 
 Looks at a few frames from each clip and fills in its Scene, Title, Description,
 Keywords, Shot type, Angle and a suggested in/out. Two engines:

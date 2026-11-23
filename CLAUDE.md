@@ -1,6 +1,6 @@
-# Ingest Sorter: notes for Claude
+# First Assist: notes for Claude
 
-Ingest Sorter is a local macOS app that sorts, tags, rates and approves video footage before the edit, then sends the selects to DaVinci Resolve. The owner is Shane Hulbert (GitHub: shanehulbert). Explain changes in plain language, by what will be seen on screen, not by what changed in the code.
+First Assist (called Ingest Sorter until 23 November 2026) is a local macOS app that sorts, tags, rates and approves video footage before the edit, then sends the selects to DaVinci Resolve. The owner is Shane Hulbert (GitHub: shanehulbert). Explain changes in plain language, by what will be seen on screen, not by what changed in the code.
 
 ## How to work here
 
@@ -15,7 +15,7 @@ Ingest Sorter is a local macOS app that sorts, tags, rates and approves video fo
 ## Layout
 
 ```
-Open Ingest Sorter.command   launcher: runs sorter/server.py, opens http://localhost:8765
+Open First Assist.command   launcher: runs sorter/server.py, opens http://localhost:8765
 Check Setup.command          runs sorter/check_setup.py
 sorter/server.py             HTTP server (Python standard library only), all /api routes
 sorter/library.py            library.json, catalogues, projects, ingest pipeline, Send, vocabulary, people
@@ -71,6 +71,5 @@ Test against a throwaway library: `python3 sorter/server.py --port 8799 --no-bro
 - Speech transcription and dialogue search.
 - Several selects per clip (markers or subclips).
 - Watch folders.
-- A proper Mac app bundle ("Ingest Sorter.app") and renaming the launcher.
 - Windows and Linux (the folder picker and Resolve script install are Mac-only).
 - The Claude prices in `tagger.py` (`CLAUDE_MODELS`) were written by hand and have not been checked against Anthropic's price list.

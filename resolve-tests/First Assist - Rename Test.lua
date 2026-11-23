@@ -1,9 +1,9 @@
--- Ingest Sorter - Rename Test.lua
+-- First Assist - Rename Test.lua
 -- Tries each way of renaming a Media Pool clip and reports which one works.
 -- Acts on the FIRST clip in the current bin. Results in Workspace > Console (Lua tab).
 -- Run again to put the original name back.
 
-local LOG = (os.getenv("HOME") or "") .. "/Movies/Video Footage Sorter/footage-sorter/resolve/rename-test-log.txt"
+local LOG = (os.getenv("HOME") or "") .. "/Movies/First Assist/first-assist/resolve/rename-test-log.txt"
 local lines = {}
 local function say(s) print("[Rename test] " .. s); lines[#lines + 1] = s end
 local function finish()

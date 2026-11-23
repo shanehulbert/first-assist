@@ -1,4 +1,4 @@
-# Ingest Sorter: detailed reference
+# First Assist: detailed reference
 
 Detailed notes on each feature, written as the versions were built. Start with the [README](../README.md); where the two differ, the README is current.
 
@@ -15,7 +15,7 @@ Everything runs locally on your Mac.
 5. **Send approved to Resolve:**
    - **moves** approved clips into the destination. On another drive, each clip is copied, verified (size and checksum) and only then removed from the source. Rejected clips stay where they are.
    - writes the Resolve import files into `_Resolve import` inside the destination:
-     - `Ingest Sorter - Apply Last Send.lua`: Send installs this in Resolve's Scripts folder (it appears straight away, no restart). In Resolve, **select your media bin and run Workspace > Scripts > Ingest Sorter - Apply Last Send**. It works in the free version of Resolve, and it:
+     - `First Assist - Apply Last Send.lua`: Send installs this in Resolve's Scripts folder (it appears straight away, no restart). In Resolve, **select your media bin and run Workspace > Scripts > First Assist - Apply Last Send**. It works in the free version of Resolve, and it:
        - imports any approved clips not yet in the Media Pool into that bin
        - renames each clip to its Clip Name, sets its in/out marks, colours it (A-roll **Green**, B-roll **Apricot**) and **writes its metadata** (Scene, Shot, Shot Type, Shoot Day, People, Description, Keywords, Comments, Rating, Angle, Move and any Metadata panel fields). Clips not yet in the Media Pool are imported from where they are into the selected bin
        - builds the draft timeline by **duplicating your template timeline** (set under Settings > Resolve draft timeline; default: the first timeline in `00_Timelines/00.01_Working`) and placing the clips on **V1**, in recording order, trimmed to their in/out, with their audio on A1. With no template it makes a plain timeline.
@@ -89,7 +89,7 @@ Optional, for fuller camera details: `brew install exiftool`. When it's installe
 
 ## Use
 
-Double-click **Open Ingest Sorter.command**, or run `python3 sorter/server.py`. Then work in the browser at http://localhost:8765. Keep the Terminal window open while you work.
+Double-click **Open First Assist.command**, or run `python3 sorter/server.py`. Then work in the browser at http://localhost:8765. Keep the Terminal window open while you work.
 
 Projects and their thumbnails and proxies live in a `library` folder beside this code folder.
 
@@ -125,7 +125,7 @@ Either way, the Resolve files (script, metadata CSV, catalogue report and backup
 
 The scanner skips `iMovie Cache`, `iMovie Thumbnails`, `_Resolve Import`, `02_Project` and `03_Deliverables`.
 
-`resolve-tests/Ingest Sorter - Metadata Test.lua` checks whether a script can write clip metadata directly in your version of Resolve.
+`resolve-tests/First Assist - Metadata Test.lua` checks whether a script can write clip metadata directly in your version of Resolve.
 
 ### Sending again, and project details (v1.9)
 
