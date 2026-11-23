@@ -15,7 +15,9 @@ First Assist (called Ingest Sorter until 23 November 2026) is a local macOS app 
 ## Layout
 
 ```
-Open First Assist.command   launcher: runs sorter/server.py, opens http://localhost:8765
+Open First Assist.command   backup launcher in Terminal: runs sorter/server.py, opens http://localhost:8765
+tools/make_app.sh            builds First Assist.app (default /Applications): starts the server in the background, opens a tab
+branding/                    the studio icon artwork (app icon 1024, tiles); sorter/static/icons/ holds the browser-tab copies
 Check Setup.command          runs sorter/check_setup.py
 sorter/server.py             HTTP server (Python standard library only), all /api routes
 sorter/library.py            library.json, catalogues, projects, ingest pipeline, Send, vocabulary, people
@@ -34,6 +36,22 @@ No build step and no third-party Python packages are required. `opencv-python-he
 
 Run it: `python3 sorter/server.py` (options: `--port`, `--no-browser`, `--library <folder>`).
 Test against a throwaway library: `python3 sorter/server.py --port 8799 --no-browser --library /tmp/testlib`.
+If 8765 is busy the server falls back to the next free port, but never 8766 (Keyword Generator's; its Lightroom
+plug-in only talks to 8766).
+
+**Mac launcher (Stage 3, Nov 2026; same shape as Keyword Generator's).** `tools/make_app.sh` builds a small bundle
+(Info.plist, a bash `launch` script, an .icns made with sips + iconutil, ad-hoc signed). The launch script has this
+folder's path baked in, so rebuild after moving it. It checks `/api/version` on 8765 (`"app"` first-assist, or the
+old footage-sorter → just `open` the URL), alerts if another program holds the port (so the app never ends up on a
+fallback port), else starts `/usr/bin/python3 sorter/server.py --port 8765 --no-browser` with nohup (log:
+`library/first-assist.log`), waits up to 15 s and opens the URL. **On Apple silicon it starts Python with
+`arch -arm64`** (from Finder/the Dock the script can run under Rosetta, and the arm64 OpenCV/NumPy then fail to load;
+`LSRequiresNativeExecution` is set too). `FA_APP_PORT` / `FA_APP_LIBRARY` exist only to build test copies.
+**Quit** (foot of the sidebar) asks once, and again if a project's status is running; it POSTs `/api/quit` (refused
+if the Origin isn't localhost). The server shuts down after replying, then **waits for every POST still in progress**
+(`BUSY` counter: Send, Undo, Move back and New project move files inside one request) before exiting, so a move is
+never cut off half-way. Background threads (scan, previews, AI, faces) just stop. The page shows “has stopped” and
+reloads itself when the app is back (the status poll also shows that page if the server disappears).
 
 ## Data model
 

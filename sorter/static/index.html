@@ -40,6 +40,8 @@ kbd{font-size:9px;border:1px solid currentColor;border-radius:3px;padding:0 3px;
 .ttabs button.on[data-tp=send]{border-color:#3fb6a8}.ttabs button.on[data-tp=send] svg{stroke:#3fb6a8}
 .ttabs button.on[data-tp=settings]{border-color:var(--set)}.ttabs button.on[data-tp=settings] svg{stroke:var(--set)}
 .tp{display:none}.tp.on{display:block}
+.quitbox{margin-top:26px;padding-top:14px;border-top:1px solid #222}.quitbox button{width:100%}.quitbox .pm{margin-top:6px;font-size:11.5px;color:var(--muted)}
+.stopped{max-width:520px;margin:18vh auto 0;padding:0 24px;line-height:1.6;color:var(--muted)}.stopped h2{color:var(--text);margin:14px 0 6px;font-size:22px}.stopped img{width:56px;height:56px}
 .tband{margin:0 -14px 10px;padding:9px 18px;font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
 .tband .act{font-size:12px;font-weight:600;cursor:pointer}
 .tband.lib{background:#26262a;color:#e8e6e1}.tband.meta{background:#341a2a;color:#f0b3d6}.tband.flt{background:#2b2614;color:#f0d27a}.tband.ai{background:#231c38;color:#cbbcf7}.tband.snd{background:#10302c;color:#8fe0d4}.tband.set{background:#142538;color:#9cc2f0}
@@ -292,6 +294,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
    <div class="tband set">Settings</div>
    <div id="settings"></div>
   </div>
+  <div class="quitbox"><button id="quitBtn">Quit First Assist</button><div class="pm">Stops the app on this Mac. Open it again from the Dock.</div></div>
  </aside>
 
  <section class="main">
@@ -592,8 +595,19 @@ function setProgress(s){const bar=$('#pprog'),st=$('#pstatus');
   bar.className='pprog';
   if(s.state==='error'){st.className='st err';st.innerHTML=esc('Problem: '+(s.message||'something went wrong'))+' <button class="link" id="stX">dismiss</button>';$('#stX').onclick=()=>setProgress(null);return}
   st.className='st done';st.innerHTML='✓ '+esc(s.message||'Done');clearTimeout(doneT);doneT=setTimeout(()=>{if(!wasRun)setProgress(null)},8000)}
+let STOPPED=false;
+function showStopped(byQuit){if(STOPPED)return;STOPPED=true;clearInterval(poll);
+  document.body.innerHTML=`<div class="stopped"><img src="/icons/apple-touch-icon.png" alt="" onerror="this.remove()"><h2>First Assist has stopped.</h2>
+    ${byQuit?'You quit it.':'It isn’t answering: it may have been quit or closed.'} Open it again from the Dock (or with <b>Open First Assist.command</b>), then this page carries on by itself.</div>`;
+  const back=async()=>{try{const r=await fetch('/api/version',{cache:'no-store'});if(r.ok)return location.reload()}catch(e){}setTimeout(back,3000)};setTimeout(back,3000)}
+$('#quitBtn').onclick=async()=>{
+  if(!confirm('Quit First Assist?\n\nIt stops on this Mac until you open it again.'))return;
+  let busy=[];try{const L2=await api('/api/library');busy=L2.projects.filter(p=>p.status&&p.status.state==='running').map(p=>`“${p.name}” (${(p.status.stage||'working').toLowerCase()})`)}catch(e){}
+  if(busy.length&&!confirm(`Still working on ${busy.join(', ')}. Quit anyway?\n\nWhatever is running stops part-way and can be run again later. A Send or move that has started always finishes first.`))return;
+  try{await fetch('/api/quit',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'})}catch(e){}
+  showStopped(true)};
 function startPoll(){clearInterval(poll);lastKey=null;wasRun=false;clearTimeout(doneT);setProgress(null);
-  poll=setInterval(async()=>{if(!PID)return;const pid=PID,s=await api(`/api/p/${pid}/status`);if(pid!==PID)return;
+  poll=setInterval(async()=>{if(!PID||STOPPED)return;const pid=PID;let s;try{s=await api(`/api/p/${pid}/status`)}catch(e){return showStopped(false)}if(pid!==PID)return;
   const run=s.state==='running';
   if(run){wasRun=true;clearTimeout(doneT);setProgress(s)}
   else if(s.state==='error'){if(wasRun||lastKey===null)setProgress(s);wasRun=false}
