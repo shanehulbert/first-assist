@@ -1,4 +1,4 @@
-# Ingest Sorter for DaVinci Resolve
+# First Assist for DaVinci Resolve
 
 Sort, tag, rate and approve your footage **before** it goes into an edit. Then send the selects to DaVinci Resolve in one step: clips imported, named, marked, coloured and tagged, on a draft timeline.
 
