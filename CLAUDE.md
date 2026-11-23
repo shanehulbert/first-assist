@@ -61,7 +61,15 @@ Test against a throwaway library: `python3 sorter/server.py --port 8799 --no-bro
 
 - Toggle switches, not checkboxes.
 - Keep the stats row, keyword filter and filter row above the clip browser. Keep the Tool Panels (Library, Filter, AI, Metadata, Send, Settings) with their icons and names.
-- Colours: orange `#e8873a` accent and selected state, blue approved, green ingested or sent, red rejected, purple for filled metadata. See `:root` in `index.html`.
+- Colours: blue approved, green ingested or sent, red rejected, purple for filled metadata. See `:root` in `index.html`.
+- Studio livery shared with Keyword Generator (decided 23 Nov 2026): icon = white bars and chevron on brand purple `#9333ea`
+  (icon tiles only; artwork in `branding/`, browser-tab copies in `sorter/static/icons/`, served at `/icons/…` and
+  `/favicon.ico`); the sidebar shows the 26 px tile beside the wordmark `#a855f7` (flat, no gradient).
+  **Orange `#e8873a` (`--me`) means “your edits” only**: star ratings, and a clip card's scene line when you set the
+  scene yourself. The general accent (`--accent`, `--proj`) is neutral off-white `#e8e6e1` (primary buttons with dark
+  text, selected segments, the Library band, progress bars); focus rings are blue `--set`; running status is grey;
+  the selected project and Managed tag are neutral grey. AI colours (`#a58cf0` and its shades), the Filter tab's yellow,
+  warnings (amber) and Resolve clip colours (A-roll green, B-roll apricot) are unchanged. Don't use purple as a general accent.
 - Class names in `index.html` are global. Prefix new ones (the Dashboard uses `d...`) and check a name isn't already used: `.row` and `.r` have clashed before.
 - Australian English in all user-facing text. Plain words; explain a term the first time.
 - Mock up bigger interface changes and agree them before building.

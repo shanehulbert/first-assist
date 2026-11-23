@@ -101,6 +101,11 @@ class Handler(BaseHTTPRequestHandler):
         p = unquote(urlparse(self.path).path)
         if p in ("/", "/index.html"):
             return self.send_file(os.path.join(HERE, "static", "index.html"))
+        if p == "/favicon.ico":
+            return self.send_file(os.path.join(HERE, "static", "icons", "favicon-32.png"))
+        m = re.fullmatch(r"/icons/([\w-]+\.(?:svg|png))", p)
+        if m:
+            return self.send_file(os.path.join(HERE, "static", "icons", m.group(1)))
         if p == "/api/version":
             from ingest import tools
             return self.send_json({"app": "first-assist", "version": 5, "release": RELEASE, "tools": tools()})
