@@ -32,7 +32,8 @@ META_FIELDS = ["Take", "Day / Night", "Environment", "Camera #", "Reel Number", 
 DEFAULT_SETTINGS = {"conf_green": 70, "conf_red": 40,
                     "tl_bin": "00_Timelines/00.01_Working", "tl_template": "",
                     "ai_engine": "off", "ai_auto": False, "claude_model": "claude-haiku-5-5",
-                    "ollama_model": "", "ollama_url": "http://localhost:11434", "faces_on": False}
+                    "ollama_model": "", "ollama_url": "http://localhost:11434", "faces_on": False,
+                    "ai_px": 768, "ollama_keep": 30}
 
 
 def _clean(s):

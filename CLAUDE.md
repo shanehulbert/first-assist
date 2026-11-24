@@ -65,6 +65,19 @@ reloads itself when the app is back (the status poll also shows that page if the
   - Linked Media: Send moves nothing. A sent clip keeps status `approved` and gets `clip["sent"]`; the UI shows it green as "sent" (`vstat()` in the front end, the same rule in `dashboard.py` and `/api/library`).
 - Resolve files go to `<project folder>/02_Project/_Resolve Import`.
 
+## AI describer decisions (v1.11, Local AI Speed brief)
+
+- The AI never sees the whole clip: it gets evenly spaced still frames (4 for Local, 6 for Claude), JPEG.
+- "Image size sent to AI" (setting `ai_px`): 768 / 1024 / 1536 px long edge, **default 768** (Shane's choice; Keyword Generator uses 1024). Applies to both engines. Previews are 540 px high (960 wide for 16:9), so above that the frames are read from the original (read only); if the original isn't connected the preview is used. Frames are never enlarged.
+- Claude's cost estimate is worked out from the image size (about width × height / 750 tokens a frame).
+- Ollama: `num_ctx` is fixed at 32768 in **both** apps. Different values make Ollama reload the model (about 20 s) every time the other app uses it. Don't change it in one app only.
+- `keep_alive` comes from the setting `ollama_keep` (5/15/30/60 minutes, default 30). The model is pre-loaded when Local is chosen, the model changes, or the app starts with Local on.
+- `num_predict` is capped at 2048: qwen2.5vl sometimes gets stuck repeating itself and would otherwise write until the context is full (seen: 14,000+ tokens on one clip).
+- Thinking is turned off (`think: false`) only for models whose Ollama capabilities include "thinking".
+- Answers use Ollama's `format` with the JSON schema (they already did before v1.11).
+- Recommended models are listed in Settings with their `ollama pull` line; the app never downloads a model. The default model isn't changed by the app.
+- Each described clip records `ai.seconds` and `ai.image_px` (shown as "AI time" in the clip details), the run message gives the average, and every clip adds a line to `ai-timing.csv` in the project folder in the library (never in the repo).
+
 ## DaVinci Resolve facts (free version, tested on Resolve 21, macOS)
 
 - Scripts in `~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Utility/` appear under Workspace > Scripts without a restart.

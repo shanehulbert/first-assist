@@ -40,6 +40,7 @@ kbd{font-size:9px;border:1px solid currentColor;border-radius:3px;padding:0 3px;
 .ttabs button.on[data-tp=send]{border-color:#3fb6a8}.ttabs button.on[data-tp=send] svg{stroke:#3fb6a8}
 .ttabs button.on[data-tp=settings]{border-color:var(--set)}.ttabs button.on[data-tp=settings] svg{stroke:var(--set)}
 .tp{display:none}.tp.on{display:block}
+.recm .rm{margin:6px 0;padding:6px 8px;border:1px solid #2a2a2e;border-radius:6px}.recm code{display:block;margin-top:3px;font-size:11.5px;user-select:all}
 .quitbox{margin-top:26px;padding-top:14px;border-top:1px solid #222}.quitbox button{width:100%}.quitbox .pm{margin-top:6px;font-size:11.5px;color:var(--muted)}
 .stopped{max-width:520px;margin:18vh auto 0;padding:0 24px;line-height:1.6;color:var(--muted)}.stopped h2{color:var(--text);margin:14px 0 6px;font-size:22px}.stopped img{width:56px;height:56px}
 .tband{margin:0 -14px 10px;padding:9px 18px;font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
@@ -255,8 +256,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 <div class="app">
  <aside class="side">
   <div class="brand"><img src="/icons/tile.svg" alt=""><div class="wm">First Assist</div></div>
-  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.10</div>
-  <div class="tagline">AI sorting &amp; describing your footage</div>
+  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.11</div>
   <nav class="ttabs" aria-label="Tool panels"><button data-tp="library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Library</button><button data-tp="filter"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filter</button><button data-tp="ai"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8zM18 15l.9 2.1 2.1.9-2.1.9L18 21l-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button><button data-tp="meta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01"/></svg>Metadata</button><button data-tp="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6M20 4v16"/></svg>Send</button><button data-tp="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button></nav>
 
   <div class="tp" id="tp-library">
@@ -650,6 +650,9 @@ function renderAIPanel(){
    <div class="blk"><h5>AI describer</h5>
     <div class="aiseg" id="aiDef">${['off','local','claude'].map(e=>`<button data-e="${e}" class="${(SET.ai_engine||'off')===e?'on':''}">${{off:'Off',local:'Local',claude:'Claude'}[e]}</button>`).join('')}</div>
     <div id="aiBox"><div class="pm">Checking…</div></div>
+    ${(SET.ai_engine||'off')!=='off'?`<label class="pm" style="margin-top:10px;display:block">Image size sent to AI</label>
+    <div class="aiseg" id="aiPx">${[768,1024,1536].map(v=>`<button data-v="${v}" class="${(+SET.ai_px||768)===v?'on':''}">${v} px</button>`).join('')}</div>
+    <div class="pm">Long edge of each frame. Bigger shows more detail but is slower on Local and costs more on Claude. Above 960 px the frames are read from the original footage, so its drive needs to be connected (otherwise the preview is used).</div>`:''}
     ${(SET.ai_engine||'off')!=='off'?`<div class="sw ${SET.ai_auto?'on':''}" id="aiAuto"><span class="tr"></span><span>Automatic: describe new footage as it's processed${SET.ai_auto?' (on)':' (off)'}</span></div>`:''}
     <div class="pm">Set up once here; applies to all projects. Then use <b>✦ Describe with AI</b> above, or at the top of the clips. Your own edits are never overwritten.</div>
    </div>
@@ -659,6 +662,7 @@ function renderAIPanel(){
     <div class="pm">Runs on this Mac only. Known people are tagged with a confidence light; unknown faces wait in the People tab for a name or Reject.</div>
    </div>`;
   document.querySelectorAll('#aiDef button').forEach(b=>b.onclick=async()=>{SET=(await api('/api/settings',{ai_engine:b.dataset.e})).settings;renderAIPanel();renderTact(proj())});
+  document.querySelectorAll('#aiPx button').forEach(b=>b.onclick=async()=>{SET=(await api('/api/settings',{ai_px:+b.dataset.v})).settings;renderAIPanel()});
   const au=$('#aiAuto');if(au)au.onclick=async()=>{const on=!SET.ai_auto;SET=(await api('/api/settings',{ai_auto:on})).settings;renderAIPanel();
     if(on&&PID){const n=Object.values(CAT.clips).filter(c=>!(c.ai&&c.ai.description)).length;
       if(n&&confirm(`Automatic describing will run on new footage from now on.\n\n${n} clip${n===1?'':'s'} in this project don't have a description yet. Describe them now?`)){
@@ -721,16 +725,26 @@ async function fillAI(){AI=await api('/api/ai');const box=$('#aiBox');if(!box)re
     ${o.running?(vis.length?`<select id="aiLM"><option value="">Choose…</option>${vis.map(m=>`<option value="${esc(m.name)}" ${m.name===cur?'selected':''}>${esc(m.name)}${m.gb?` · ${m.gb} GB`:''}</option>`).join('')}</select>`
       :`<div class="aist bad">Ollama is running but has no vision model yet. In Terminal: <code>ollama pull qwen2.5vl:7b</code>, then click <button class="link" id="aiRe">check again</button>.</div>`)
      :`<div class="aist bad">Ollama isn't running. Install it from ollama.com, open it, then <button class="link" id="aiRe">check again</button>.</div>`}
-    ${o.running&&cur&&!vis.some(m=>m.name===cur)?`<div class="aist bad">“${esc(cur)}” isn't installed any more.</div>`:''}`;
+    ${o.running&&cur&&!vis.some(m=>m.name===cur)?`<div class="aist bad">“${esc(cur)}” isn't installed any more.</div>`:''}
+    ${o.running&&cur&&vis.some(m=>m.name===cur)?`<div class="pm">${(o.loaded||[]).includes(cur)?'Loaded and ready.':'Loading the model in the background…'}</div>`:''}
+    ${o.running?`<label class="pm" style="margin-top:8px;display:block">Keep the model loaded for</label>
+    <select id="aiKeep">${[5,15,30,60].map(m=>`<option value="${m}" ${(+SET.ollama_keep||30)===m?'selected':''}>${m} minutes after the last clip</option>`).join('')}</select>
+    <label class="pm" style="margin-top:10px;display:block">Recommended vision models</label>
+    <div class="recm">${(o.recommended||[]).map(r=>{const have=o.models.some(m=>m.name===r.name||m.name===r.name+':latest');
+      return `<div class="rm"><b>${esc(r.name)}</b> <span class="muted">· about ${r.gb} GB</span>${have?' <span class="aist ok" style="display:inline">installed ✓</span>':''}<div class="pm">${esc(r.note)}</div>${have?'':`<code>ollama pull ${esc(r.name)}</code>`}</div>`}).join('')}</div>
+    <div class="pm">To add one, run its <b>ollama pull</b> line in Terminal, then <button class="link" id="aiRe2">check again</button>.</div>`:''}`;
   const claude=`<label class="pm">Claude model</label><select id="aiCM">${Object.entries(AI.claude_models).map(([k,v])=>`<option value="${k}" ${k===(SET.claude_model||'claude-haiku-5-5')?'selected':''}>${esc(v.label)}</option>`).join('')}</select>
     <label class="pm" style="margin-top:6px;display:block">API key</label>
     ${AI.key_from_env?'<div class="aist ok">Using the ANTHROPIC_API_KEY environment variable.</div>':AI.has_key?
       `<div class="aist ok">Key saved on this Mac ✓ <button class="link" id="aiTest">Test</button> · <button class="link" id="aiClr">Remove</button></div>`:
       `<div class="keyrow"><input id="aiKey" type="password" placeholder="sk-ant-…" autocomplete="off"><button id="aiSave">Save</button></div><div class="pm">Create one at platform.claude.com › API keys. It's stored only on this Mac.</div>`}`;
   box.innerHTML=eng==='off'?'<div class="pm">Turned off. Choose Local or Claude to describe clips.</div>':eng==='local'?local:claude;
-  const lm=$('#aiLM');if(lm)lm.onchange=async e=>{SET=(await api('/api/settings',{ollama_model:e.target.value})).settings;toast('Local model saved.');renderTact(proj())};
+  const lm=$('#aiLM');if(lm)lm.onchange=async e=>{SET=(await api('/api/settings',{ollama_model:e.target.value})).settings;toast('Local model saved.');renderTact(proj());fillAI()};
   const cm=$('#aiCM');if(cm)cm.onchange=async e=>{SET=(await api('/api/settings',{claude_model:e.target.value})).settings};
   const re=$('#aiRe');if(re)re.onclick=()=>fillAI();
+  const re2=$('#aiRe2');if(re2)re2.onclick=()=>fillAI();
+  const kp=$('#aiKeep');if(kp)kp.onchange=async e=>{SET=(await api('/api/settings',{ollama_keep:+e.target.value})).settings;toast('Saved.')};
+  if(eng==='local'&&o.running&&cur&&!(o.loaded||[]).includes(cur)&&vis.some(m=>m.name===cur))setTimeout(()=>{if($('#aiKeep'))fillAI()},5000);
   const sv=$('#aiSave');if(sv)sv.onclick=async()=>{const k=$('#aiKey').value.trim();if(!k)return;sv.disabled=true;sv.textContent='Checking…';
     const r=await api('/api/ai/key',{key:k});toast(r.ok?'Key saved. It works.':esc(r.message),6000);fillAI()};
   const ts=$('#aiTest');if(ts)ts.onclick=async()=>{const r=await api('/api/ai/key',{});toast(r.ok?'The key works.':esc(r.message),6000)};
@@ -750,7 +764,7 @@ async function openAI(){if(!PID)return;
 function aiScope(){const v=document.querySelector('input[name=aiscope]:checked').value;return v==='shown'?{scope:'ids',ids:LIST.map(c=>c.id)}:{scope:v}}
 async function aiRefresh(){const aiEngine=SET.ai_engine;$('#aiEng').innerHTML=`Using <b>${esc(aiLabel())}</b> <span class="muted">(change under Settings › AI describer)</span>`;
   const r=await api(`/api/p/${PID}/describe/estimate`,{...aiScope(),model:SET.claude_model});
-  $('#aiEst').innerHTML=`${r.count} clip${r.count===1?'':'s'}. `+(aiEngine==='claude'?`Estimated cost about <b>US$${r.cost<0.01?r.cost.toFixed(3):r.cost.toFixed(2)}</b> with ${esc((AI&&AI.claude_models[SET.claude_model||'claude-haiku-5-5']||{}).label||'Claude')}.`:`Free, on this Mac${SET.ollama_model?' with '+esc(SET.ollama_model):''}. Allow roughly 10 to 60 seconds a clip.`);
+  $('#aiEst').innerHTML=`${r.count} clip${r.count===1?'':'s'}. `+(aiEngine==='claude'?`Estimated cost about <b>US$${r.cost<0.01?r.cost.toFixed(3):r.cost.toFixed(2)}</b> with ${esc((AI&&AI.claude_models[SET.claude_model||'claude-haiku-5-5']||{}).label||'Claude')}.`:`Free, on this Mac${SET.ollama_model?' with '+esc(SET.ollama_model):''}. Allow roughly 10 to 60 seconds a clip.`)+` <span class="muted">Frames sent at ${r.px||768} px.</span>`;
   $('#aiGo').disabled=!r.count}
 document.querySelectorAll('input[name=aiscope]').forEach(i=>i.onchange=aiRefresh);
 $('#aiCancel').onclick=()=>$('#aimodal').classList.remove('on');
@@ -960,7 +974,7 @@ function select(id){SEL=id;const c=CAT.clips[id];if(!c)return;stopJ();
     ['Exposure',esc([m.iso&&('ISO '+m.iso),m.shutter,m.shutter_angle!=null&&(m.shutter_angle+'° shutter'),m.aperture].filter(Boolean).join(' · '))],
     ['White balance',m.wb_kelvin&&(esc(m.wb_kelvin)+' K')],['Start timecode',esc(m.timecode)],['End timecode',m.timecode&&tcAt(c,m.duration)],
     ['Duration',`${hms(m.duration)} (${m.duration.toFixed(2)} s)`],['Audio',m.audio?'Yes':'No'],['Project (camera)',esc(m.project)],['Environment',esc(m.environment)],['File size',m.size_mb+' MB'],
-    ['File',`${esc(c.file)}<br><span class="muted">${esc(c.moved_to?c.moved_to.replace(/\/[^/]*$/,''):c.src_dir)}</span>`],['Tagged by',esc(c.ai.source)]].filter(r=>r[1]);
+    ['File',`${esc(c.file)}<br><span class="muted">${esc(c.moved_to?c.moved_to.replace(/\/[^/]*$/,''):c.src_dir)}</span>`],['Tagged by',esc(c.ai.source)],['AI time',c.ai.seconds?`${c.ai.seconds} s${c.ai.image_px?` · frames at ${c.ai.image_px} px`:''}`:'']].filter(r=>r[1]);
   const d=$('#detail');d.className='detail';
   d.innerHTML=`<div class="dfixed"><div class="dhrow"><div class="dh" id="dname">${esc(clipName(c))}</div><button class="cpy" id="cpyName" title="Copy the clip name">⧉ Copy</button></div><div class="dfile">${esc(c.file)}${c.moved_to?'<span class="pill">In destination</span>':''}</div>
   <div class="vwrap"><video id="v" src="${src}" controls preload="metadata"></video><canvas id="cropCv"></canvas></div>

@@ -1076,6 +1076,10 @@ def update_settings(data):
             lib["settings"]["ai_auto"] = bool(data["ai_auto"])
         if "faces_on" in data:
             lib["settings"]["faces_on"] = bool(data["faces_on"])
+        if str(data.get("ai_px", "")) in ("768", "1024", "1536"):
+            lib["settings"]["ai_px"] = int(data["ai_px"])
+        if str(data.get("ollama_keep", "")) in ("5", "15", "30", "60"):
+            lib["settings"]["ollama_keep"] = int(data["ollama_keep"])
         for k in ("claude_model", "ollama_model", "ollama_url"):
             if k in data:
                 lib["settings"][k] = str(data[k]).strip()

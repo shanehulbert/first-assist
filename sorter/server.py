@@ -231,8 +231,11 @@ class Handler(BaseHTTPRequestHandler):
                 tagger.set_key(key)
             return self.send_json({**res, "has_key": bool(tagger.get_key())})
         if p == "/api/settings":
-            import export
-            return self.send_json({"settings": {**export.DEFAULT_SETTINGS, **L.update_settings(data)}})
+            import export, tagger
+            st = {**export.DEFAULT_SETTINGS, **L.update_settings(data)}
+            if {"ai_engine", "ollama_model", "ollama_keep"} & set(data):
+                tagger.preload(st)   # Local chosen: load the model now so the first clip doesn't wait
+            return self.send_json({"settings": st})
         if p == "/api/vocab":
             return self.send_json({"vocab": L.vocab_action(data)})
         if p == "/api/projects/check":
@@ -357,7 +360,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_json(tagger.start_tidy(pid, data.get("engine")))
             if arg == "estimate":
                 n = len(tagger.pick_clips(pid, data.get("scope", "untagged"), data.get("ids")))
-                return self.send_json({"count": n, "cost": tagger.estimate(n, data.get("model"))})
+                return self.send_json({"count": n, "cost": tagger.estimate(n, data.get("model")), "px": tagger.image_size()})
             return self.send_json(tagger.start(pid, data.get("scope", "untagged"), data.get("ids"), data.get("engine")))
         if action == "rescan":
             L.start_ingest(pid)
@@ -375,7 +378,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
-RELEASE = "1.10"
+RELEASE = "1.11"
 SERVER = None            # set in main(), so Quit can stop it
 BUSY = [0]               # POST requests in progress (Send and friends move files inside one)
 BUSY_LOCK = threading.Lock()
@@ -413,6 +416,11 @@ def main():
         threading.Timer(0.8, lambda: webbrowser.open(url)).start()
     global SERVER
     SERVER = server
+    try:
+        import tagger
+        tagger.preload()   # starting with Local on: load the model in the background
+    except Exception:  # noqa: BLE001 - never stop the app starting
+        pass
     server.serve_forever()
     # Quit was pressed. Never stop half-way through moving files: wait for any Send, Undo, Move back
     # or New project that is still running (each saves the catalogue when it's done).

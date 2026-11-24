@@ -9,7 +9,7 @@ Keywords, Shot type, Angle and a suggested in/out. Two engines:
 Results go into each clip's "ai" values. Anything you have typed yourself (the
 "review" values) is never overwritten.
 """
-import base64, json, os, subprocess, threading, time, urllib.error, urllib.request
+import base64, csv, json, os, subprocess, threading, time, urllib.error, urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
@@ -22,8 +22,19 @@ CLAUDE_MODELS = {  # US$ per million tokens (prompts under 100k tokens)
 }
 CLAUDE_URL = "https://api.anthropic.com/v1"
 FRAMES = {"claude": 6, "local": 4}
-FRAME_SIZE = 768
-EST_TOKENS = {"in": 4200, "out": 450}  # per clip, for the cost estimate before a run
+IMAGE_SIZES = (768, 1024, 1536)   # "Image size sent to AI": long edge in pixels, both engines
+PROXY_HEIGHT = 540                # previews are made at 540 px high (ingest.py)
+EST_TOKENS = {"text": 900, "out": 450}  # per clip, plus the frames (worked out from the size), for the cost estimate
+# Both apps (First Assist and Keyword Generator) ask Ollama for this same context size. If they asked for
+# different sizes, Ollama would reload the model (about 20 s) every time the other app used it.
+NUM_CTX = 32768
+KEEP_ALIVE_CHOICES = (5, 15, 30, 60)  # minutes the local model stays loaded after the last clip
+RECOMMENDED = [  # shown under the local model list; never downloaded by the app
+    {"name": "qwen3-vl:4b-instruct", "gb": 3.3, "note": "Small and fast. Suggested new default."},
+    {"name": "qwen3-vl:8b-instruct", "gb": 6.1, "note": "Better descriptions, slower."},
+    {"name": "gemma3:4b", "gb": 3.3, "note": "Light, reliable keyword lists."},
+    {"name": "qwen2.5vl:7b", "gb": 6.0, "note": "The model used until now, kept for comparison."},
+]
 VISION_HINTS = ("vl", "vision", "llava", "gemma3", "gemma4", "minicpm-v", "moondream", "qwen3.5", "qwen3.6", "mistral-small3")
 
 
@@ -120,31 +131,84 @@ def ollama_status(url=None):
     for m in tags.get("models", []):
         name = m.get("name") or m.get("model")
         vision = None
-        try:
-            info = _http("POST", f"{url}/api/show", {"model": name}, timeout=8)
-            if "capabilities" in info:
-                vision = "vision" in info["capabilities"]
-        except ApiError:
-            pass
+        caps = _caps(name, url)
+        if caps is not None:
+            vision = "vision" in caps
         if vision is None:
             vision = any(h in name.lower() for h in VISION_HINTS)
         size = m.get("size") or 0
         models.append({"name": name, "vision": vision, "gb": round(size / 1e9, 1)})
-    return {"running": True, "models": models, "url": url}
+    return {"running": True, "models": models, "url": url, "recommended": RECOMMENDED, "loaded": _loaded(url)}
+
+
+_CAPS = {}
+
+
+def _caps(name, url):
+    """What a local model can do (vision, thinking…), from Ollama. None if Ollama doesn't say."""
+    if name not in _CAPS:
+        try:
+            _CAPS[name] = _http("POST", f"{url}/api/show", {"model": name}, timeout=8).get("capabilities")
+        except ApiError:
+            return None
+    return _CAPS[name]
+
+
+def _loaded(url):
+    try:
+        return [m.get("name") for m in _http("GET", f"{url}/api/ps", timeout=4).get("models", [])]
+    except ApiError:
+        return []
+
+
+def keep_alive(st=None):
+    m = int((st or settings()).get("ollama_keep") or 30)
+    return f"{m if m in KEEP_ALIVE_CHOICES else 30}m"
+
+
+def preload(st=None):
+    """Load the chosen local model now (in the background), so the first clip doesn't wait for it."""
+    st = st or settings()
+    model, url = st.get("ollama_model"), (st.get("ollama_url") or "http://localhost:11434").rstrip("/")
+    if st.get("ai_engine") != "local" or not model:
+        return False
+
+    def go():
+        try:
+            _http("POST", f"{url}/api/generate", {"model": model, "keep_alive": keep_alive(st),
+                                                  "options": {"num_ctx": NUM_CTX}}, timeout=300)
+        except ApiError:
+            pass  # Ollama not running or model gone: the Settings panel already says so
+    threading.Thread(target=go, daemon=True).start()
+    return True
 
 
 # ---------- frames ----------
-def frames(pid, clip, n):
-    """n evenly spaced JPEG frames (bytes) plus their times, from the proxy if there is one."""
-    src = os.path.join(L.pdir(pid), clip["proxy"]) if clip.get("proxy") else L.clip_path(clip)
-    if not os.path.exists(src):
-        src = L.clip_path(clip)
+def image_size(st=None):
+    v = int((st or settings()).get("ai_px") or 768)
+    return v if v in IMAGE_SIZES else 768
+
+
+def _proxy_long_edge(clip):
+    w, h = float(clip["meta"].get("width") or 16), float(clip["meta"].get("height") or 9)
+    return round(PROXY_HEIGHT * max(w, h) / max(1.0, min(w, h)))
+
+
+def frames(pid, clip, n, size=768):
+    """n evenly spaced JPEG frames (bytes) plus their times, at most `size` px on the long edge.
+    From the preview when it's big enough, otherwise from the original (read only). Never enlarged."""
+    proxy = os.path.join(L.pdir(pid), clip["proxy"]) if clip.get("proxy") else ""
+    orig = L.clip_path(clip)
+    if proxy and os.path.exists(proxy) and (size <= _proxy_long_edge(clip) or not os.path.exists(orig)):
+        src = proxy
+    else:
+        src = orig if os.path.exists(orig) else proxy
     dur = float(clip["meta"].get("duration") or 0) or 1.0
     out = []
     for k in range(n):
         t = dur * (k + 0.5) / n
         cmd = [find_tool("ffmpeg") or "ffmpeg", "-v", "error", "-ss", f"{t:.3f}", "-i", src, "-frames:v", "1",
-               "-vf", f"scale=w={FRAME_SIZE}:h={FRAME_SIZE}:force_original_aspect_ratio=decrease",
+               "-vf", f"scale=w='min(iw,{size})':h='min(ih,{size})':force_original_aspect_ratio=decrease",
                "-q:v", "4", "-f", "image2pipe", "-vcodec", "mjpeg", "-"]
         r = subprocess.run(cmd, capture_output=True)
         if r.returncode == 0 and r.stdout:
@@ -229,11 +293,18 @@ def ask_claude(images, text, model, key, fmt=None):
     return _parse(txt), cost
 
 
+MAX_ANSWER = 2048  # tokens; an answer is usually 150-300. Stops a model that gets stuck repeating itself.
+LAST_LOCAL = {}  # Ollama's own counts for the last local request (prompt tokens, load time)
+
+
 def ask_local(images, text, model, url, fmt=None):
     msg = {"role": "user", "content": text}
     if images:
         msg["images"] = [base64.b64encode(b).decode() for b in images]
-    body = {"model": model, "stream": False, "format": fmt or schema(), "options": {"temperature": 0.2}, "messages": [msg]}
+    body = {"model": model, "stream": False, "format": fmt or schema(), "keep_alive": keep_alive(),
+            "options": {"temperature": 0.2, "num_ctx": NUM_CTX, "num_predict": MAX_ANSWER}, "messages": [msg]}
+    if "thinking" in (_caps(model, url.rstrip("/")) or []):
+        body["think"] = False   # thinking makes describing much slower and adds nothing here
     try:
         r = _http("POST", f"{url.rstrip('/')}/api/chat", body, timeout=600)
     except ApiError as e:
@@ -242,6 +313,12 @@ def ask_local(images, text, model, url, fmt=None):
         if e.status == 404:
             raise ApiError(404, e.body, f"Ollama doesn't have the model “{model}”. Pick one in Settings › AI describer.")
         raise
+    LAST_LOCAL.update(prompt_tokens=r.get("prompt_eval_count") or 0, load_s=round((r.get("load_duration") or 0) / 1e9, 1))
+    if LAST_LOCAL["prompt_tokens"] >= NUM_CTX - 512:
+        raise RuntimeError(f"the request ({LAST_LOCAL['prompt_tokens']} tokens) is too big for the local model's "
+                           f"context ({NUM_CTX}). Choose a smaller image size in Settings › AI describer.")
+    if r.get("done_reason") == "length":
+        raise RuntimeError("the local model got stuck repeating itself and was stopped. Try the clip again, or another model")
     return _parse(r.get("message", {}).get("content", "")), 0.0
 
 
@@ -286,9 +363,30 @@ def engine_label(engine, st=None):
     return "Local: " + (st.get("ollama_model") or "?")
 
 
+def est_tokens_in(size=768):
+    """Claude counts an image as about width × height / 750 tokens (16:9 frames assumed)."""
+    return EST_TOKENS["text"] + FRAMES["claude"] * round(size * size * 9 / 16 / 750)
+
+
 def estimate(n, model=None):
-    price = CLAUDE_MODELS.get(model or settings().get("claude_model") or "claude-haiku-5-5")
-    return round(n * (EST_TOKENS["in"] * price["in"] + EST_TOKENS["out"] * price["out"]) / 1e6, 4)
+    st = settings()
+    price = CLAUDE_MODELS.get(model or st.get("claude_model") or "claude-haiku-5-5") or CLAUDE_MODELS["claude-haiku-5-5"]
+    return round(n * (est_tokens_in(image_size(st)) * price["in"] + EST_TOKENS["out"] * price["out"]) / 1e6, 4)
+
+
+def log_timing(pid, row):
+    """One line per clip in the project's ai-timing.csv (in the library, never in the code folder)."""
+    path = os.path.join(L.pdir(pid), "ai-timing.csv")
+    new = not os.path.exists(path)
+    try:
+        with open(path, "a", newline="", encoding="utf-8") as f:
+            w = csv.writer(f)
+            if new:
+                w.writerow(["date", "app", "engine", "model", "image_px", "seconds", "keywords_returned",
+                            "keywords_kept", "missing_terms", "clip", "result"])
+            w.writerow(row)
+    except OSError:
+        pass  # a log that can't be written never stops describing
 
 
 def pick_clips(pid, scope, ids=None):
@@ -326,13 +424,19 @@ def describe(pid, ids, engine, nested=False):
     lib = L.load_lib()
     vocab = [v["term"] for v in lib.get("vocab", []) if v.get("pinned")] + \
             [v["term"] for v in lib.get("vocab", []) if not v.get("pinned")]
-    totals = {"done": 0, "cost": 0.0, "failed": 0, "fatal": ""}
+    px = image_size(st)
+    totals = {"done": 0, "cost": 0.0, "failed": 0, "fatal": "", "secs": []}
     lock = threading.Lock()
+
+    def _log_fail(cid, name, t0, why):
+        log_timing(pid, [datetime.now().isoformat(timespec="seconds"), "First Assist", engine, model, px,
+                         round(time.time() - t0, 1), "", "", "", name, "failed: " + why])
 
     def one(cid):
         if totals["fatal"] or L.STATUS.get(pid, {}).get("cancel"):
             return
         name = cid
+        t0 = time.time()
         try:
             with L.LOCK:
                 cat = L.load_cat(pid)
@@ -341,11 +445,17 @@ def describe(pid, ids, engine, nested=False):
                 return
             name = clip.get("file", cid)
             scenes = sorted({(c["review"].get("scene") or c["ai"].get("scene") or "") for c in cat["clips"].values()} - {""})
-            fr = frames(pid, clip, FRAMES[engine])
+            t0 = time.time()   # the clock starts at the frames, not while waiting for the catalogue
+            fr = frames(pid, clip, FRAMES[engine], px)
             text = prompt(p, clip, [t for t, _ in fr], vocab, scenes)
             imgs = [b for _, b in fr]
             res, cost = ask_claude(imgs, text, model, key) if engine == "claude" else ask_local(imgs, text, model, url)
+            returned = len(res.get("keywords") or [])
             res = clean(res, clip)
+            secs = round(time.time() - t0, 1)
+            res["seconds"], res["image_px"] = secs, px
+            log_timing(pid, [datetime.now().isoformat(timespec="seconds"), "First Assist", engine, model, px, secs,
+                             returned, len(res["keywords"]), "", name, "ok"])
             with L.LOCK:
                 cat = L.load_cat(pid)
                 c = cat["clips"].get(cid)
@@ -357,7 +467,9 @@ def describe(pid, ids, engine, nested=False):
                     L.save_cat(pid, cat)
             with lock:
                 totals["cost"] += cost
+                totals["secs"].append(secs)
         except ApiError as e:
+            _log_fail(cid, name, t0, e.friendly)
             with lock:
                 totals["failed"] += 1
                 if e.status in (0, 401, 403, 404) or "credit" in e.friendly.lower():
@@ -365,6 +477,7 @@ def describe(pid, ids, engine, nested=False):
                 else:
                     L._set(pid, message=f"{name}: {e.friendly}")
         except Exception as e:  # noqa: BLE001 - one bad clip shouldn't stop the run
+            _log_fail(cid, name, t0, str(e))
             with lock:
                 totals["failed"] += 1
                 L._set(pid, message=f"{name}: {e}")
@@ -388,6 +501,8 @@ def describe(pid, ids, engine, nested=False):
         except Exception as e:  # noqa: BLE001 - descriptions are already saved
             tidy = f" · couldn't tidy scenes ({getattr(e, 'friendly', e)})"
     msg = f"Described {ok} clip{'s' if ok != 1 else ''} with {label}" + tidy
+    if totals["secs"]:
+        msg += f" · {sum(totals['secs']) / len(totals['secs']):.1f} s a clip on average"
     if engine == "claude":
         msg += f" · cost about US${totals['cost']:.3f}"
     if totals["failed"]:
