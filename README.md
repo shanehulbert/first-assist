@@ -8,7 +8,7 @@ Sort, tag, rate and approve your footage **before** it goes into an edit. Then s
 - Runs on your own Mac. Your footage is never uploaded, unless you choose the optional Claude describer.
 - Free and open source (MIT licence).
 
-> **Status: v1.11.1, early testing.** Built and tested on macOS (Apple Silicon) with DaVinci Resolve 21. It has not been tested on Windows or Linux. Please report problems under **Issues**.
+> **Status: v1.12, early testing.** Built and tested on macOS (Apple Silicon) with DaVinci Resolve 21. It has not been tested on Windows or Linux. Please report problems under **Issues**.
 
 ## What it does
 

@@ -63,6 +63,7 @@ kbd{font-size:9px;border:1px solid currentColor;border-radius:3px;padding:0 3px;
 .mf.filled label,.mf.inh label{color:#f0b3d6}.mf.inh input::placeholder{color:#c79ab4;opacity:1}.fsec.has>.fsh .t{color:#f0b3d6}
 .mproj{background:#191419;border:1px solid #33263a;border-radius:9px;padding:2px 9px 6px;margin-bottom:10px}.mproj .fsh .t{font-size:13px}.mproj .sub2{font-size:11px;color:var(--muted);margin:-4px 0 4px 23px}
 .npdet{margin-top:10px;border:1px solid #2e2e2e;border-radius:9px;padding:6px 10px}.npdet summary{cursor:pointer;font-size:13px;font-weight:600;padding:3px 0}.npdet summary span{font-weight:400;color:var(--muted);font-size:11.5px}
+.npdet .grid .chk input{border-color:var(--set)}.npdet .grid .chk label::after{content:" · check this";color:var(--set)}
 .npdet .grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;margin-top:6px}.npdet .grid label{font-size:11px;margin:0 0 1px}.npdet .grid input{width:100%;box-sizing:border-box;font-size:12.5px;padding:4px 7px}
 .mf.filled label{color:#f0b3d6}.fsh select.mcp{margin-left:auto;font-size:11px;padding:2px 4px;max-width:110px}
 .mmap{font-size:11.5px;color:#b8b5ae;display:grid;grid-template-columns:auto 1fr;gap:2px 10px}.mmap b{color:#e8e6e1;font-weight:600}
@@ -143,7 +144,9 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;position:relative}
 .card.approved{border:2px solid var(--appr)}.card.ingested{border:2px solid var(--ing)}.card.rejected{border:2px solid var(--bad)}
 .card.sel{outline:2px solid #fff;outline-offset:2px}#grid{padding-top:6px;padding-left:22px;padding-right:22px}#fReset{border:1px solid var(--accent);color:var(--text)}#fReset:hover{background:#2a2a2e}
-.th{position:relative;aspect-ratio:16/9;background:#000}.th img{width:100%;height:100%;object-fit:cover;display:block}
+.th{position:relative;aspect-ratio:16/9;background:#000}
+.iob{position:absolute;left:0;right:0;bottom:0;height:4px;background:#000a;pointer-events:none}.iob i{position:absolute;top:0;bottom:0;background:var(--me)}
+.bl span.io{background:var(--me);color:#1a1208;font-weight:600}.fim{position:relative}.th img{width:100%;height:100%;object-fit:cover;display:block}
 .scrub{position:absolute;inset:0;display:flex}.scrub i{flex:1}
 .badge{position:absolute;top:6px;left:6px;font-size:10px;padding:1px 7px;border-radius:9px;font-weight:600}
 .badge.approved{background:var(--appr);color:#fff}.badge.ingested{background:var(--ing);color:#06210f}.badge.offline{left:auto;right:6px;top:28px;background:#7a2f2f;color:#fff}.badge.rejected{background:var(--bad);color:#2a0606}
@@ -256,7 +259,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 <div class="app">
  <aside class="side">
   <div class="brand"><img src="/icons/tile.svg" alt=""><div class="wm">First Assist</div></div>
-  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.11.1</div>
+  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.12</div>
   <nav class="ttabs" aria-label="Tool panels"><button data-tp="library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Library</button><button data-tp="filter"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filter</button><button data-tp="ai"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8zM18 15l.9 2.1 2.1.9-2.1.9L18 21l-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button><button data-tp="meta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01"/></svg>Metadata</button><button data-tp="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6M20 4v16"/></svg>Send</button><button data-tp="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button></nav>
 
   <div class="tp" id="tp-library">
@@ -358,6 +361,8 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
   <div class="pick"><input id="npEdit" placeholder="/Volumes/Video Drive/Films/2026 Highlights"><button id="npEditPick">Choose…</button></div>
   <div class="help">Gets 02_Project/_Resolve Import (the files for Resolve) and 03_Deliverables. No footage is copied or moved.</div>
  </div>
+ <label>Start with details from</label><select class="full" id="npFrom"></select>
+ <div class="help" id="npFromInfo"></div>
  <details class="npdet" id="npDet"><summary>Project details <span>(optional) · copied to every clip's Resolve metadata</span></summary>
   <div class="grid"></div></details>
  <div class="err" id="npErr"></div>
@@ -414,6 +419,10 @@ function autoName(c){const p=proj()||{},ppl=peopleOf(c).filter(x=>x.conf==null||
   const tok={project:p.name,person:ppl[0]||'',title:eff(c,'title')||eff(c,'scene'),scene:eff(c,'scene'),shot:eff(c,'shot_type'),day:dayOf(c),date:(c.meta.recorded||'').slice(0,10),clip:(/(C\d{3,4})$/.exec(c.id)||[])[1]||c.id,camera:c.meta.camera_id||'',reel:c.meta.reel||'',role:role(c),location:loc};
   const sep=p.name_sep??OPT.default_sep??'_';return (p.name_tokens||OPT.default_tokens||[]).map(t=>partOf(tok[t],sep)).filter(Boolean).join(sep)}
 const clipName=c=>clean(c.review.clip_name)||autoName(c);
+// In/out set by you (not the AI's suggestion): an orange bar along the foot of the thumbnail shows where
+function hasIO(c){return c.review.in!=null||c.review.out!=null}
+function ioBar(c){if(!hasIO(c))return '';const d=c.meta.duration||1,[i,o]=inOut(c);
+  return `<div class="iob" title="In ${tcAt(c,i)} → Out ${tcAt(c,o)} (${(o-i).toFixed(1)} s), set by you"><i style="left:${(i/d*100).toFixed(2)}%;width:${((o-i)/d*100).toFixed(2)}%"></i></div>`}
 function inOut(c){const d=c.meta.duration;let i=c.review.in??c.ai.suggested_in??0,o=c.review.out??c.ai.suggested_out??d;if(o<=i){i=0;o=d}return [i,o]}
 const fpsOf=c=>Math.round(c.meta.fps||24);
 function tcFrames(c){const t=(c.meta.timecode||'00:00:00:00').split(/[:;]/).map(Number);return ((t[0]*60+t[1])*60+t[2])*fpsOf(c)+(t[3]||0)}
@@ -617,9 +626,22 @@ async function chooseFolder(prompt_,current){const r=await api('/api/choose-fold
   if(r.path)return r.path;if(r.path==='')return null;return prompt("The folder picker couldn't open. Type or paste the folder path:",current||'')||null}
 $('#newProj').onclick=()=>{npReset();$('#modal').classList.add('on');$('#npErr').textContent='';$('#npName').focus()};
 $('#npCancel').onclick=()=>$('#modal').classList.remove('on');
-let NP={mode:'shoot',srcs:[],loose:0};
+let NP={mode:'shoot',srcs:[],loose:0,carry:null};
+// A new project can start with another project's details: the Project details fields, clip name settings, client and location.
+// The most recently created project is chosen to begin with. Episode # and Episode Name are flagged, as they usually change.
+const NP_CHECK=['Episode #','Episode Name'];
+function npFromList(){return [...((LIB&&LIB.projects)||[])].sort((a,b)=>(b.created||'').localeCompare(a.created||''))}
+function npApplyFrom(){const id=$('#npFrom').value,p=npFromList().find(x=>x.id===id),m=(p&&p.meta)||{};
+  document.querySelectorAll('[data-npm]').forEach(i=>{i.value=m[i.dataset.npm]||'';i.parentElement.classList.toggle('chk',!!p&&NP_CHECK.includes(i.dataset.npm)&&!!m[i.dataset.npm])});
+  NP.carry=p?{name_tokens:p.name_tokens||['title','day','shot','clip'],name_sep:p.name_sep||'_',client:p.client||'',location:p.location||''}:null;
+  if(!p){$('#npFromInfo').textContent='Starts empty.';$('#npDet').open=false;return}
+  const n=Object.keys(m).length,c=NP.carry,toks=c.name_tokens.map(t=>t[0].toUpperCase()+t.slice(1)).join(` ${c.name_sep} `);
+  $('#npFromInfo').textContent=`Copies ${n} project detail${n===1?'':'s'} (shown below, change any of them), clip names ${toks}`+(c.client?`, client “${c.client}”`:'')+(c.location?`, location “${c.location}”`:'')+'. Folders, Send mode and clips are not copied.';
+  $('#npDet').open=n>0}
 function npReset(){$('#npDet .grid').innerHTML=PFIELDS.map(f=>`<div><label>${esc(f)}</label><input data-npm="${esc(f)}" placeholder="${f==='Production Name'?'Same as the project name':''}"></div>`).join('');$('#npDet').open=false;
-  NP={mode:'shoot',srcs:[],loose:0};['#npName','#npRoot','#npEdit'].forEach(q=>$(q).value='');$('#npRootInfo').textContent='';$('#npMove').style.display='none';$('#npMove').classList.add('on');npRender()}
+  const ps=npFromList();$('#npFrom').innerHTML=ps.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('')+'<option value="">None (start empty)</option>';$('#npFrom').value=ps.length?ps[0].id:'';
+  NP={mode:'shoot',srcs:[],loose:0,carry:null};['#npName','#npRoot','#npEdit'].forEach(q=>$(q).value='');$('#npRootInfo').textContent='';$('#npMove').style.display='none';$('#npMove').classList.add('on');npApplyFrom();npRender()}
+$('#npFrom').onchange=npApplyFrom;
 function npRender(){document.querySelectorAll('#npMode button').forEach(b=>b.classList.toggle('on',b.dataset.m===NP.mode));
   $('#npShoot').style.display=NP.mode==='shoot'?'':'none';$('#npArch').style.display=NP.mode==='archive'?'':'none';
   $('#npSrcList').innerHTML=NP.srcs.map((s,i)=>`<div class="npsrc"><span>${esc(s)}</span><button data-rm="${i}">Remove</button></div>`).join('')||'<div class="help" style="margin-bottom:6px">No folders yet.</div>';
@@ -638,7 +660,7 @@ $('#npAddSrc').onclick=async()=>{const pth=await chooseFolder('Add a footage fol
 $('#npEditPick').onclick=async()=>{const pth=await chooseFolder('Choose (or create) the folder for this edit',$('#npEdit').value);if(pth)$('#npEdit').value=pth};
 $('#npCreate').onclick=async()=>{const meta={};document.querySelectorAll('[data-npm]').forEach(i=>{if(i.value.trim())meta[i.dataset.npm]=i.value.trim()});
   const body0=NP.mode==='shoot'?{mode:'shoot',name:$('#npName').value,root:$('#npRoot').value.trim(),move_loose:$('#npMove').style.display!=='none'&&$('#npMove').classList.contains('on')}
-    :{mode:'archive',name:$('#npName').value,sources:NP.srcs,edit_dir:$('#npEdit').value.trim()},body={...body0,meta};
+    :{mode:'archive',name:$('#npName').value,sources:NP.srcs,edit_dir:$('#npEdit').value.trim()},body={...body0,meta,...(NP.carry?{carry:NP.carry}:{})};
   $('#npErr').textContent='';const b=$('#npCreate');b.disabled=true;const r=await api('/api/projects',body);b.disabled=false;
   if(r.error){$('#npErr').textContent=r.error;return}$('#modal').classList.remove('on');
   if(r.moved)toast(`Moved ${r.moved} loose clip${r.moved===1?'':'s'} into 01_Footage/00_Rushes.`);
@@ -910,7 +932,7 @@ function render(){
     return `<div class="card ${vstat(c)} ${SEL===c.id?'sel':''}" data-id="${esc(c.id)}"><div class="th">${mid?`<img src="${mp(mid.src)}" loading="lazy" alt="">`:''}
      <div class="scrub">${c.thumbs.map((t,i)=>`<i data-i="${i}"></i>`).join('')}</div>
      ${c.review.status!=='unreviewed'?`<span class="badge ${vstat(c)}">${vstat(c)==='ingested'?sentWord():c.review.status}</span>`:''}${c.offline?'<span class="badge offline" title="The file can\'t be found right now">missing</span>':''}
-     <div class="bl">${role(c)?`<span class="role">${esc(role(c))}</span>`:''}${sh?`<span>${esc(sh)}</span>`:''}</div>
+     <div class="bl">${role(c)?`<span class="role">${esc(role(c))}</span>`:''}${sh?`<span>${esc(sh)}</span>`:''}${hasIO(c)?`<span class="io" title="In and out set by you">In/Out ${(inOut(c)[1]-inOut(c)[0]).toFixed(1)}s</span>`:''}</div>${ioBar(c)}
      <span class="dur">${dot}${c.meta.duration.toFixed(1)}s</span></div>
      <div class="b"><div class="cat${c.review.scene?' me':''}">${esc(eff(c,'scene')||'No scene yet')}</div><div class="ttl">${esc(eff(c,'title')||c.file)}</div>${pn.length?`<div class="ppl">${pn.map(esc).join(', ')}</div>`:''}<div class="d">${esc(eff(c,'description'))}</div>
      <div class="row"><span>${esc((/(C\d{3,4})$/.exec(c.id)||[])[1]||c.file)}${camLens(c)?' · '+esc(camLens(c).replace(/^.* (\d+mm)$/,'$1')):''}</span><span class="stars">${'★'.repeat(c.review.rating||0)}</span></div></div></div>`}).join('')
@@ -1274,7 +1296,7 @@ function arrangeViewer(){if(!viewerOn()||!$('#dscroll'))return;const ds=$('#dscr
 function renderFilm(){if(!viewerOn())return;if(!SEL&&LIST.length){select(LIST[0].id);return}const p=proj(),i=LIST.findIndex(c=>c.id===SEL);
   $('#vwTitle').textContent=p?p.name:'';$('#vwPos').textContent=LIST.length?(i>=0?`Clip ${i+1} of ${LIST.length}`:`${LIST.length} clips`)+(LIST.length<Object.keys(CAT.clips).length?' · filtered':''):'No clips match the filters';
   $('#filmInfo').textContent=`${LIST.length} clip${LIST.length===1?'':'s'} · ${($('#fsort').selectedOptions[0]||{}).textContent||''}`;
-  $('#film').innerHTML=LIST.map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return `<div class="fi ${vstat(c)} ${c.id===SEL?'sel':''}" data-id="${esc(c.id)}">${t?`<img src="${mp(t.src)}" loading="lazy" alt="">`:'<div class="ph"></div>'}<div class="t">${esc(eff(c,'title')||c.file)}</div></div>`}).join('');
+  $('#film').innerHTML=LIST.map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return `<div class="fi ${vstat(c)} ${c.id===SEL?'sel':''}" data-id="${esc(c.id)}"><div class="fim">${t?`<img src="${mp(t.src)}" loading="lazy" alt="">`:'<div class="ph"></div>'}${ioBar(c)}</div><div class="t">${esc(eff(c,'title')||c.file)}</div></div>`}).join('');
   $('#film').querySelectorAll('.fi').forEach(el=>el.onclick=()=>select(el.dataset.id));
   $('#film .fi.sel')?.scrollIntoView({block:'nearest',inline:'center'})}
 $('#vwPrev').onclick=()=>{const i=LIST.findIndex(c=>c.id===SEL);if(i>0)select(LIST[i-1].id)};

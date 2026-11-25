@@ -78,6 +78,16 @@ reloads itself when the app is back (the status poll also shows that page if the
 - Recommended models are listed in Settings with their `ollama pull` line; the app never downloads a model. The default model isn't changed by the app.
 - Each described clip records `ai.seconds` and `ai.image_px` (shown as "AI time" in the clip details), the run message gives the average, and every clip adds a line to `ai-timing.csv` in the project folder in the library (never in the repo).
 
+## New projects start from another project (v1.12)
+
+- The New project window has "Start with details from", set to the most recently created project, or None.
+- It copies the Project details fields (into the form, where they can be changed before Create), the clip name
+  tokens and separator, client and location. Never the name, folders, Send mode, destination, timeline name,
+  sends or clips. Production Name only carries over if it was typed (the default is still the project name).
+- Episode # and Episode Name are marked "check this", because they usually change for each project.
+- Clips whose in or out you set (review.in/out, not the AI's suggestion) show an orange In/Out tag on the card and an
+  orange bar along the foot of the thumbnail (Clips grid and Viewer film strip) marking where the range sits.
+
 ## DaVinci Resolve facts (free version, tested on Resolve 21, macOS)
 
 - Scripts in `~/Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Utility/` appear under Workspace > Scripts without a restart.

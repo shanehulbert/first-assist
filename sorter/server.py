@@ -258,6 +258,16 @@ class Handler(BaseHTTPRequestHandler):
                                               meta=data.get("meta") if isinstance(data.get("meta"), dict) else None)
             except Exception as e:  # noqa: BLE001
                 return self.send_json({"error": f"Couldn't set up the folders: {e}"}, 400)
+            # "Start with details from": the other project's clip name settings, client and location
+            carry = data.get("carry") if isinstance(data.get("carry"), dict) else {}
+            keep = {}
+            if isinstance(carry.get("name_tokens"), list) and all(isinstance(t, str) for t in carry["name_tokens"]):
+                keep["name_tokens"] = carry["name_tokens"]
+            for k in ("name_sep", "client", "location"):
+                if isinstance(carry.get(k), str):
+                    keep[k] = carry[k]
+            if keep:
+                L.update_project(pid, **keep)
             L.start_ingest(pid)
             return self.send_json({"id": pid, "moved": moved})
         if p == "/api/projects":
@@ -378,7 +388,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
-RELEASE = "1.11.1"
+RELEASE = "1.12"
 SERVER = None            # set in main(), so Quit can stop it
 BUSY = [0]               # POST requests in progress (Send and friends move files inside one)
 BUSY_LOCK = threading.Lock()
