@@ -256,7 +256,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 <div class="app">
  <aside class="side">
   <div class="brand"><img src="/icons/tile.svg" alt=""><div class="wm">First Assist</div></div>
-  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.11</div>
+  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.11.1</div>
   <nav class="ttabs" aria-label="Tool panels"><button data-tp="library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Library</button><button data-tp="filter"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filter</button><button data-tp="ai"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8zM18 15l.9 2.1 2.1.9-2.1.9L18 21l-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button><button data-tp="meta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01"/></svg>Metadata</button><button data-tp="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6M20 4v16"/></svg>Send</button><button data-tp="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button></nav>
 
   <div class="tp" id="tp-library">
@@ -784,7 +784,7 @@ async function facesSection(){FGN=0;if(!PID||!SET.faces_on)return '';const r=awa
   if(!gs.length)return '';
   return `<div class="vsec"><h3>Faces to name <span class="muted small">(${gs.length} in ${esc((proj()||{}).name||'')})</span></h3>
    <div class="vintro">Faces found in this project that don't match anyone yet. Type a name (new or existing) to tag every clip they're in, or <b>Reject</b> to ignore that face from now on.</div>
-   <div class="fgrid">${gs.map(g=>`<div class="fgroup" data-g="${esc(g.id)}"><div class="fcrops">${g.crops.map(c=>`<img src="/p/${esc(PID)}/${esc(c)}" alt="">`).join('')}</div>
+   <div class="fgrid">${gs.map(g=>`<div class="fgroup" data-g="${esc(g.id)}"><div class="fcrops">${g.crops.map(c=>`<img src="${mp(c)}" alt="">`).join('')}</div>
      <div class="pm">In ${g.clips.length} clip${g.clips.length===1?'':'s'} <button class="link" data-show="${esc(g.id)}">show</button></div>
      <div class="frow"><input list="peopleList" placeholder="Name…" data-name="${esc(g.id)}"><button class="primary" data-save="${esc(g.id)}">Save</button><button data-rej="${esc(g.id)}">Reject</button></div></div>`).join('')}</div></div>`}
 function bindFaces(){const pv=$('#peopleView');
@@ -907,7 +907,7 @@ function render(){
   const g=$('#grid'),st=g.scrollTop;
   g.innerHTML=LIST.map(c=>{const mid=c.thumbs[Math.floor(c.thumbs.length/2)],sh=eff(c,'shot_type'),ms=moveState(c),pn=pnames(c);
     const dot=ms.state==='none'?'':`<span class="dot ${ms.state}" title="Camera movement: ${esc(ms.move||'')} ${ms.state==='done'?'(confirmed)':ms.pct+'%'}"></span>`;
-    return `<div class="card ${vstat(c)} ${SEL===c.id?'sel':''}" data-id="${esc(c.id)}"><div class="th">${mid?`<img src="/p/${PID}/${mid.src}" loading="lazy" alt="">`:''}
+    return `<div class="card ${vstat(c)} ${SEL===c.id?'sel':''}" data-id="${esc(c.id)}"><div class="th">${mid?`<img src="${mp(mid.src)}" loading="lazy" alt="">`:''}
      <div class="scrub">${c.thumbs.map((t,i)=>`<i data-i="${i}"></i>`).join('')}</div>
      ${c.review.status!=='unreviewed'?`<span class="badge ${vstat(c)}">${vstat(c)==='ingested'?sentWord():c.review.status}</span>`:''}${c.offline?'<span class="badge offline" title="The file can\'t be found right now">missing</span>':''}
      <div class="bl">${role(c)?`<span class="role">${esc(role(c))}</span>`:''}${sh?`<span>${esc(sh)}</span>`:''}</div>
@@ -917,8 +917,8 @@ function render(){
     ||(total?'<div class="empty">No clips match these filters.</div>':`<div class="empty">${p?'No clips yet. Processing will fill this in.':'Create a project to begin: + New, under Projects.'}</div>`);
   g.scrollTop=st;
 }
-$('#grid').addEventListener('mousemove',e=>{const i=e.target.closest('.scrub i');if(!i)return;const card=i.closest('.card'),c=CAT.clips[card.dataset.id],im=card.querySelector('img');if(im)im.src=`/p/${PID}/${c.thumbs[+i.dataset.i].src}`});
-$('#grid').addEventListener('mouseout',e=>{const card=e.target.closest('.card');if(!card||card.contains(e.relatedTarget))return;const c=CAT.clips[card.dataset.id],im=card.querySelector('img');if(im&&c.thumbs.length)im.src=`/p/${PID}/${c.thumbs[Math.floor(c.thumbs.length/2)].src}`});
+$('#grid').addEventListener('mousemove',e=>{const i=e.target.closest('.scrub i');if(!i)return;const card=i.closest('.card'),c=CAT.clips[card.dataset.id],im=card.querySelector('img');if(im)im.src=mp(c.thumbs[+i.dataset.i].src)});
+$('#grid').addEventListener('mouseout',e=>{const card=e.target.closest('.card');if(!card||card.contains(e.relatedTarget))return;const c=CAT.clips[card.dataset.id],im=card.querySelector('img');if(im&&c.thumbs.length)im.src=mp(c.thumbs[Math.floor(c.thumbs.length/2)].src)});
 $('#grid').addEventListener('click',e=>{const card=e.target.closest('.card');if(card)select(card.dataset.id)});
 $('#grid').addEventListener('dblclick',e=>{const card=e.target.closest('.card');if(card){select(card.dataset.id);setTab('viewer')}});
 ['#q','#fscene','#fstatus','#frate','#flens','#frole','#fperson','#fshot','#fmove','#fsort'].forEach(s=>$(s).addEventListener('input',render));
@@ -966,7 +966,7 @@ function confHtml(c){const s=moveState(c),mo=c.motion||{};if(s.state==='none')re
 function select(id){SEL=id;const c=CAT.clips[id];if(!c)return;stopJ();
   document.querySelectorAll('.card').forEach(el=>el.classList.toggle('sel',el.dataset.id===id));
   document.querySelector(`.card[data-id="${CSS.escape(id)}"]`)?.scrollIntoView({block:'nearest'});
-  const m=c.meta,loc=c.location||{},src=c.proxy?`/p/${PID}/${c.proxy}`:`/p/${PID}/original/${encodeURIComponent(c.id)}`;
+  const m=c.meta,loc=c.location||{},src=c.proxy?mp(c.proxy):`/p/${PID}/original/${encodeURIComponent(c.id)}`;
   const maps=loc.lat!=null?`https://www.google.com/maps?q=${loc.lat},${loc.lon}`:null;
   const rows=[['Recorded',esc(fmtRec(m.recorded))],['Shoot day',dayOf(c)],['Location',loc.name?`<a href="${maps}" target="_blank">${esc(loc.name)}</a>`:(maps?'<span class="muted">Looking up…</span>':'')],
     ['GPS',maps?`<a href="${maps}" target="_blank">${loc.lat.toFixed(5)}, ${loc.lon.toFixed(5)}</a>`:''],['Camera',esc([m.camera,m.camera_id&&('Cam '+m.camera_id),m.reel&&('Reel '+m.reel)].filter(Boolean).join(' · '))],['App',esc(m.app)],['Lens',esc([m.lens,m.focal].filter(Boolean).join(' · '))],
@@ -981,7 +981,7 @@ function select(id){SEL=id;const c=CAT.clips[id];if(!c)return;stopJ();
   <div class="cropbar" id="cropBar">Drag a box around the face, then choose who it is.
    <div class="dr"><input id="cropName" list="peopleList" placeholder="Name (existing or new)"><button class="primary" id="cropSave">Save face</button><button id="cropCancel">Cancel</button></div></div>
   <div class="tc"><span class="big" id="tcNow">${esc(m.timecode||'--')}</span><span class="speed" id="spd"></span><span class="small muted" id="tcEl"></span></div>
-  <div class="range" id="rng"><div class="dr"></div><div class="ph"></div></div>
+  <div class="range" id="rng"><div class="r"></div><div class="ph"></div></div>
   <div class="btns"><button id="bin" title="Set in point (I)">In ⟦ I</button><button id="bout" title="Set out point (O)">Out ⟧ O</button><button id="bplay" title="Play from in to out (P)">Play range P</button><span class="jklb"><button data-jkl="j" title="Play backwards. Click again to go faster (J)">◀ J</button><button data-jkl="k" title="Pause (K)">❚❚ K</button><button data-jkl="l" title="Play forwards. Click again to go faster (L)">L ▶</button></span><button id="bclear" title="Back to the suggested range">Reset</button><button id="bcrop" title="Crop a face from this frame for the People list">Crop face</button></div>
   <div class="tio" id="tio"></div>
   <div class="seg status" id="status">${['unreviewed','approved','rejected'].map(s=>`<button data-s="${s}" class="${s} ${c.review.status===s?'on':''}">${s==='approved'?'Approve<kbd>A</kbd>':s==='rejected'?'Reject<kbd>X</kbd>':'Unreviewed<kbd>U</kbd>'}</button>`).join('')}${c.review.status==='ingested'?'<button class="ingested on" title="Moved to the destination">Ingested ✓</button>':''}</div>
@@ -1078,6 +1078,7 @@ async function saveCrop(){if(!crop||!crop.box||crop.box[2]<8)return toast('Drag 
   const id=await personId(name);if(!id)return;const r=await api('/api/people/face',{id,image:out.toDataURL('image/jpeg',0.88)});if(r.error)return toast(esc(r.error));
   const c=CAT.clips[SEL];if(!(c.review.people||[]).includes(id))update({people:[...(c.review.people||[]),id]});
   await refreshLib();endCrop();renderPpl();buildFilters();toast(`Saved ${esc(name)}'s face and added them to this clip.`)}
+function mp(src,pid=PID){return `/p/${encodeURIComponent(pid)}/`+String(src).split('/').map(encodeURIComponent).join('/')}  // a project file's address
 function drawRange(){const c=CAT.clips[SEL],v=$('#v');if(!c||!v)return;const d=c.meta.duration,[i,o]=inOut(c);
   const r=$('#rng .r');r.style.left=(i/d*100)+'%';r.style.width=((o-i)/d*100)+'%';$('#rng .ph').style.left=(v.currentTime/d*100)+'%';
   $('#tcNow').textContent=c.meta.timecode?tcAt(c,v.currentTime):'--';$('#tcEl').textContent=`${v.currentTime.toFixed(1)} of ${d.toFixed(1)} s`;
@@ -1230,7 +1231,7 @@ async function renderPeoplePage(){PUSE=await api('/api/people/usage');const face
      <div class="pnames"><div><label class="pm">First name</label><input id="pnG" value="${esc(sel.given||'')}"></div><div><label class="pm">Family name</label><input id="pnF" value="${esc(sel.family||'')}"></div>
        <div class="sw ${sel.family_first?'on':''}" id="pnO" style="align-self:flex-end;margin:0 0 6px"><span class="tr"></span><span>Family name written first${sel.family_first?' (on)':' (off)'} <span class="muted">e.g. Chinese, Japanese, Korean names</span></span></div></div>
      <div id="pPhotos"></div>
-     <div class="pclips">${(PUSE[sel.id]||[]).map(u=>`<div class="pclip" data-proj="${esc(u.project)}" data-clip="${esc(u.clip)}"><img src="/p/${esc(u.project)}/${esc(u.thumb)}" alt=""><div>${u.conf!=null?`<span class="dot ${confState(u.conf)}" title="${u.conf}% match"></span> `:''}${esc(u.project_name)} · ${esc(u.clip.slice(-4))} · ${esc(u.status)}</div></div>`).join('')||'<div class="muted">Not on any clips yet.</div>'}</div></div>`:'';
+     <div class="pclips">${(PUSE[sel.id]||[]).map(u=>`<div class="pclip" data-proj="${esc(u.project)}" data-clip="${esc(u.clip)}"><img src="${mp(u.thumb,u.project)}" alt=""><div>${u.conf!=null?`<span class="dot ${confState(u.conf)}" title="${u.conf}% match"></span> `:''}${esc(u.project_name)} · ${esc(u.clip.slice(-4))} · ${esc(u.status)}</div></div>`).join('')||'<div class="muted">Not on any clips yet.</div>'}</div></div>`:'';
   const fShut=shut.has('faces');
   $('#peopleView').innerHTML=`<div class="vh"><h2>People</h2><span class="muted small">${LIB.people.length} ${LIB.people.length===1?'person':'people'} · shared by all projects</span></div>
    <div class="vintro">Everyone you've tagged on screen, across all your projects. People recognition tags known faces automatically; name or reject new faces under <b>Faces to name</b>. To give someone a photo by hand, pause on a good frame, click <b>Crop face</b> and drag a box around their face. People go to Resolve's <b>People</b> field and can be used in clip names.</div>
@@ -1254,7 +1255,7 @@ async function renderPeoplePage(){PUSE=await api('/api/people/usage');const face
     $('#pnG').onchange=e=>saveParts({given:e.target.value,family:$('#pnF').value});$('#pnF').onchange=e=>saveParts({given:$('#pnG').value,family:e.target.value});
     $('#pnO').onclick=()=>saveParts({family_first:!sel.family_first});
     api('/api/people/photo-options',{id:sel.id}).then(r=>{const box=$('#pPhotos');if(!box)return;const fs=r.faces||[];
-      box.innerHTML=fs.length?`<div class="pm" style="margin:10px 0 4px">Photo: click a face to use it instead${fs.length>1?` (${fs.length} found, clearest first)`:''}</div><div class="phopts">${fs.map((f,i)=>`<img src="/p/${esc(f.project)}/${esc(f.crop)}" data-i="${i}" title="${esc(f.project_name)} · ${esc(f.clip.slice(-6))}">`).join('')}</div>`
+      box.innerHTML=fs.length?`<div class="pm" style="margin:10px 0 4px">Photo: click a face to use it instead${fs.length>1?` (${fs.length} found, clearest first)`:''}</div><div class="phopts">${fs.map((f,i)=>`<img src="${mp(f.crop,f.project)}" data-i="${i}" title="${esc(f.project_name)} · ${esc(f.clip.slice(-6))}">`).join('')}</div>`
         :'<div class="pm" style="margin:10px 0 4px">To change the photo, use <b>Crop face</b> on a better frame and type this name. Faces found by people recognition will also appear here to choose from.</div>';
       box.querySelectorAll('img').forEach(im=>im.onclick=async()=>{const f=fs[+im.dataset.i];const x=await api('/api/people/photo',{id:sel.id,project:f.project,crop:f.crop});if(x.error)return toast(esc(x.error));
         toast(`New photo for ${esc(sel.name)}.`);await refreshLib();renderPeoplePage();renderSide()})})}
@@ -1273,7 +1274,7 @@ function arrangeViewer(){if(!viewerOn()||!$('#dscroll'))return;const ds=$('#dscr
 function renderFilm(){if(!viewerOn())return;if(!SEL&&LIST.length){select(LIST[0].id);return}const p=proj(),i=LIST.findIndex(c=>c.id===SEL);
   $('#vwTitle').textContent=p?p.name:'';$('#vwPos').textContent=LIST.length?(i>=0?`Clip ${i+1} of ${LIST.length}`:`${LIST.length} clips`)+(LIST.length<Object.keys(CAT.clips).length?' · filtered':''):'No clips match the filters';
   $('#filmInfo').textContent=`${LIST.length} clip${LIST.length===1?'':'s'} · ${($('#fsort').selectedOptions[0]||{}).textContent||''}`;
-  $('#film').innerHTML=LIST.map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return `<div class="fi ${vstat(c)} ${c.id===SEL?'sel':''}" data-id="${esc(c.id)}">${t?`<img src="/p/${PID}/${t.src}" loading="lazy" alt="">`:'<div class="ph"></div>'}<div class="t">${esc(eff(c,'title')||c.file)}</div></div>`}).join('');
+  $('#film').innerHTML=LIST.map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return `<div class="fi ${vstat(c)} ${c.id===SEL?'sel':''}" data-id="${esc(c.id)}">${t?`<img src="${mp(t.src)}" loading="lazy" alt="">`:'<div class="ph"></div>'}<div class="t">${esc(eff(c,'title')||c.file)}</div></div>`}).join('');
   $('#film').querySelectorAll('.fi').forEach(el=>el.onclick=()=>select(el.dataset.id));
   $('#film .fi.sel')?.scrollIntoView({block:'nearest',inline:'center'})}
 $('#vwPrev').onclick=()=>{const i=LIST.findIndex(c=>c.id===SEL);if(i>0)select(LIST[i-1].id)};
@@ -1308,7 +1309,7 @@ function renderMetaPanel(){const box=$('#metaPanel');if(!box||!$('#tp-meta').cla
     const inh=!v&&pmeta[f];
     return `<div class="mf ${v?'filled':''} ${inh?'inh':''}" title="${inh?'From Project details':''}"><label>${esc(f)}</label>${inp}</div>`};
   let k=0;const t=c.thumbs[Math.floor(c.thumbs.length/2)];
-  box.innerHTML=projSec+`<div class="mclip">${t?`<img src="/p/${PID}/${t.src}" alt="">`:''}<div><div class="n">${esc(clipName(c))}</div><div class="pm">${filled.length} Resolve field${filled.length===1?'':'s'} filled</div></div></div>
+  box.innerHTML=projSec+`<div class="mclip">${t?`<img src="${mp(t.src)}" alt="">`:''}<div><div class="n">${esc(clipName(c))}</div><div class="pm">${filled.length} Resolve field${filled.length===1?'':'s'} filled</div></div></div>
    <div class="mcopy">Copy all filled fields to <button data-cp="all">All (${all.length})</button><button data-cp="approved">Approved (${all.filter(isSel).length})</button><button data-cp="shown">Shown (${LIST.length})</button></div>
    ${MGROUPS.map(([g,fs])=>{const n=fs.filter(f=>meta[f]||pmeta[f]).length;return `<div class="fsec ${MSHUT.has(g)?'shut':''} ${n?'has':''}" data-mg="${esc(g)}"><div class="fsh"><span class="ch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span><span class="t">${esc(g)}</span><span class="n">${n?n+' filled':''}</span>
      <select class="mcp" data-cg="${esc(g)}" title="Copy this section's filled fields to other clips"><option value="">Copy to…</option><option value="all">All clips</option><option value="approved">Approved</option><option value="shown">Shown</option></select></div>

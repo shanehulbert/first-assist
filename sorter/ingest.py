@@ -276,7 +276,7 @@ def main():
             rel = f"proxies/{stem}.mp4"
             dst = os.path.join(cat_dir, rel)
             if not os.path.exists(dst):
-                ffmpeg("-i", path, "-vf", "scale=-2:540", *ENCODER, "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "96k", "-movflags", "+faststart",
+                ffmpeg("-i", path, "-vf", "scale=-2:540", *ENCODER, "-pix_fmt", "yuv420p", "-c:a", "aac", "-ac", "2", "-b:a", "96k", "-movflags", "+faststart",
                        dst + ".part.mp4")
                 os.replace(dst + ".part.mp4", dst)
             clip["proxy"] = rel

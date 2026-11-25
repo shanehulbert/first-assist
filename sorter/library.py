@@ -626,7 +626,7 @@ def make_proxies(pid):
         dst = os.path.join(d, rel)
         try:
             if not os.path.exists(dst):
-                ffmpeg("-i", clip_path(c), "-vf", "scale=-2:540", *enc, "-pix_fmt", "yuv420p", "-c:a", "aac",
+                ffmpeg("-i", clip_path(c), "-vf", "scale=-2:540", *enc, "-pix_fmt", "yuv420p", "-c:a", "aac", "-ac", "2",
                        "-b:a", "96k", "-movflags", "+faststart", dst + ".part.mp4")
                 os.replace(dst + ".part.mp4", dst)
             with LOCK:
