@@ -388,7 +388,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_error(404)
 
 
-RELEASE = "1.12"
+RELEASE = "1.13"
 SERVER = None            # set in main(), so Quit can stop it
 BUSY = [0]               # POST requests in progress (Send and friends move files inside one)
 BUSY_LOCK = threading.Lock()

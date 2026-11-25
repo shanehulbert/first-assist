@@ -143,7 +143,12 @@ body.viewer #detail #status{display:flex;margin:8px 0}body.viewer #detail #statu
 .dhrow{display:flex;align-items:center;gap:8px}.dhrow .dh{flex:1;min-width:0;overflow-wrap:anywhere}.cpy{flex:none;background:transparent;border:1px solid var(--line);color:inherit;border-radius:6px;padding:2px 8px;font-size:11px;cursor:pointer}.cpy:hover{border-color:var(--sel)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;position:relative}
 .card.approved{border:2px solid var(--appr)}.card.ingested{border:2px solid var(--ing)}.card.rejected{border:2px solid var(--bad)}
-.card.sel{outline:2px solid #fff;outline-offset:2px}#grid{padding-top:6px;padding-left:22px;padding-right:22px}#fReset{border:1px solid var(--accent);color:var(--text)}#fReset:hover{background:#2a2a2e}
+.card.sel{outline:2px solid #fff;outline-offset:2px}
+.card.msel{outline:2px solid var(--set);outline-offset:2px}.card.msel.sel{outline-color:#fff}
+.card.msel::after,.film .fi.msel .fim::after{content:"✓";position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--set);color:#08131f;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;z-index:2;pointer-events:none}
+.film .fi.msel img{border-color:var(--set)}.selnote{color:var(--set)}.selnote b{color:var(--set)}
+.mf.mixed input::placeholder{color:var(--muted);font-style:italic;opacity:1}.mf.mixed select{color:var(--muted);font-style:italic}
+.mthumbs{display:flex;gap:3px;flex-wrap:wrap;margin:4px 0 2px}.mthumbs img{width:44px;aspect-ratio:16/9;object-fit:cover;border-radius:3px}.mthumbs span{font-size:11px;color:var(--muted);align-self:center;margin-left:3px}#grid{padding-top:6px;padding-left:22px;padding-right:22px}#fReset{border:1px solid var(--accent);color:var(--text)}#fReset:hover{background:#2a2a2e}
 .th{position:relative;aspect-ratio:16/9;background:#000}
 .iob{position:absolute;left:0;right:0;bottom:0;height:4px;background:#000a;pointer-events:none}.iob i{position:absolute;top:0;bottom:0;background:var(--me)}
 .bl span.io{background:var(--me);color:#1a1208;font-weight:600}.fim{position:relative}.th img{width:100%;height:100%;object-fit:cover;display:block}
@@ -259,7 +264,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
 <div class="app">
  <aside class="side">
   <div class="brand"><img src="/icons/tile.svg" alt=""><div class="wm">First Assist</div></div>
-  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.12</div>
+  <div class="wmsub">AI logging and selects for DaVinci Resolve · v1.13</div>
   <nav class="ttabs" aria-label="Tool panels"><button data-tp="library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Library</button><button data-tp="filter"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filter</button><button data-tp="ai"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.7 4.7 1.8-4.7 1.8L12 16l-1.8-4.7-4.7-1.8 4.7-1.8zM18 15l.9 2.1 2.1.9-2.1.9L18 21l-.9-2.1-2.1-.9 2.1-.9z"/></svg>AI</button><button data-tp="meta"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8zM7.5 7.5h.01"/></svg>Metadata</button><button data-tp="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h12M12 6l6 6-6 6M20 4v16"/></svg>Send</button><button data-tp="settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button></nav>
 
   <div class="tp" id="tp-library">
@@ -330,7 +335,7 @@ table.vt input.syn{width:100%;box-sizing:border-box;font-size:12px;padding:4px 7
   <div class="view" id="viewerView">
    <div class="vwhead"><h2 id="vwTitle"></h2><span class="small muted" id="vwPos"></span><span class="sp"></span><button id="vwPrev">← Previous</button><button id="vwNext">Next →</button></div>
    <div id="vwMain"></div>
-   <div class="filmhead"><span id="filmInfo"></span><span>← → to step · A / X / U decide and move on · double-click a clip in the Clips tab to open it here</span></div>
+   <div class="filmhead"><span><span id="filmInfo"></span><span class="selbar"></span></span><span>← → to step · A / X / U decide and move on · double-click a clip in the Clips tab to open it here</span></div>
    <div class="film" id="film"></div>
   </div>
   <div class="view page" id="vocabView"></div>
@@ -399,6 +404,28 @@ const SELECTED=['approved','ingested'];const isSel=c=>SELECTED.includes(c.review
 const role=c=>c.review.role||(isSel(c)?'A-roll':'');
 const proj=()=>LIB.projects.find(p=>p.id===PID);
 const cur=()=>CAT.clips[SEL];
+// Several clips can be selected at once (⌘-click, Shift-click, ⌘A) to edit their metadata together.
+// SEL stays the one clip shown in the player; MSEL is the wider selection, used only when it holds 2 or more clips.
+let MSEL=new Set(),ANCHOR=null;
+const multi=()=>MSEL.size>1;
+function selIds(){return [...MSEL].filter(id=>CAT.clips[id])}
+function clearSel(){if(!MSEL.size)return;MSEL.clear();paintSel();renderMetaPanel()}
+function clickClip(id,e){
+  const anc=ANCHOR||SEL;
+  if(e&&e.shiftKey&&anc&&LIST.some(c=>c.id===anc)){
+    const a=LIST.findIndex(c=>c.id===anc),b=LIST.findIndex(c=>c.id===id);
+    if(!(e.metaKey||e.ctrlKey))MSEL.clear();
+    LIST.slice(Math.min(a,b),Math.max(a,b)+1).forEach(c=>MSEL.add(c.id));select(id);paintSel();return}
+  if(e&&(e.metaKey||e.ctrlKey)){
+    if(!MSEL.size&&SEL&&SEL!==id)MSEL.add(SEL);
+    if(MSEL.has(id)){MSEL.delete(id);paintSel();renderMetaPanel();return}
+    MSEL.add(id);ANCHOR=id;select(id);paintSel();return}
+  MSEL.clear();ANCHOR=id;select(id);paintSel()}
+function paintSel(){const on=multi();
+  document.querySelectorAll('.card[data-id],.film .fi[data-id]').forEach(el=>el.classList.toggle('msel',on&&MSEL.has(el.dataset.id)));
+  const n=selIds().length,hid=selIds().filter(id=>!LIST.some(c=>c.id===id)).length;
+  const txt=on?` · <span class="selnote"><b>${n}</b> clips selected${hid?` (${hid} hidden by filters)`:''}</span> <button class="link" data-clearsel>clear</button>`:'';
+  document.querySelectorAll('.selbar').forEach(x=>{x.innerHTML=txt;const b=x.querySelector('[data-clearsel]');if(b)b.onclick=clearSel})}
 const person=id=>LIB.people.find(p=>p.id===id);
 const confState=pct=>pct>=SET.conf_green?'green':pct<SET.conf_red?'red':'yellow';
 function peopleOf(c){const sure=c.review.people||[],gone=new Set(c.review.people_removed||[]),out=sure.filter(id=>person(id)).map(id=>({id,conf:null}));
@@ -586,7 +613,7 @@ function renderPeopleSide(){const cs=Object.values(CAT.clips),count=id=>cs.filte
 }
 $('#openPeople').onclick=()=>setTab('people');
 $('#addPersonSide').onclick=async()=>{const n=prompt('Name of the person:');if(!n)return;const r=await api('/api/people',{action:'add',name:n});if(r.error)return toast(esc(r.error));await refreshLib();buildFilters();if($('#peopleView').classList.contains('on'))renderPeoplePage()};
-async function openProject(id){PID=id;store.set('fs.pid',id);store.set('fs.opened',{...store.get('fs.opened',{}),[id]:new Date().toISOString()});SEL=null;ACTIVE=new Set(store.get('fs.active.'+id,[]));
+async function openProject(id){PID=id;store.set('fs.pid',id);store.set('fs.opened',{...store.get('fs.opened',{}),[id]:new Date().toISOString()});SEL=null;MSEL=new Set();ANCHOR=null;ACTIVE=new Set(store.get('fs.active.'+id,[]));
   $('#size').value=store.get('fs.size.'+id,210);applySize();
   await loadCat();renderSide();$('#detail').className='detail none';$('#detail').innerHTML='Select a clip';startPoll();
   if($('#vocabView').classList.contains('on'))renderVocab();if($('#peopleView').classList.contains('on'))renderPeoplePage()}
@@ -923,13 +950,13 @@ function render(){
     if(act.length&&!(MATCH==='all'?act.every(t=>hasKw(c,t)):act.some(t=>hasKw(c,t))))return false;
     const h=haystack(c);return q.every(w=>h.includes(w))}).sort(sorters[f('#fsort')]);
   const total=Object.keys(CAT.clips).length;
-  $('#showing').innerHTML=`Showing <b>${LIST.length}</b> of ${total}`+(GROUPF?` · clips with one unnamed face <button class="link" id="clearGroup">clear</button>`:'')+(ACTIVE.size?` · keywords: ${act.map(esc).join(MATCH==='all'?' + ':' or ')} <button class="link" id="clearTerms">clear</button>`:'');
+  $('#showing').innerHTML=`Showing <b>${LIST.length}</b> of ${total}`+(GROUPF?` · clips with one unnamed face <button class="link" id="clearGroup">clear</button>`:'')+(ACTIVE.size?` · keywords: ${act.map(esc).join(MATCH==='all'?' + ':' or ')} <button class="link" id="clearTerms">clear</button>`:'')+'<span class="selbar"></span>';
   const ct=$('#clearTerms');if(ct)ct.onclick=()=>{ACTIVE.clear();saveActive();render()};
   const cg=$('#clearGroup');if(cg)cg.onclick=()=>{GROUPF=null;render()};
   const g=$('#grid'),st=g.scrollTop;
   g.innerHTML=LIST.map(c=>{const mid=c.thumbs[Math.floor(c.thumbs.length/2)],sh=eff(c,'shot_type'),ms=moveState(c),pn=pnames(c);
     const dot=ms.state==='none'?'':`<span class="dot ${ms.state}" title="Camera movement: ${esc(ms.move||'')} ${ms.state==='done'?'(confirmed)':ms.pct+'%'}"></span>`;
-    return `<div class="card ${vstat(c)} ${SEL===c.id?'sel':''}" data-id="${esc(c.id)}"><div class="th">${mid?`<img src="${mp(mid.src)}" loading="lazy" alt="">`:''}
+    return `<div class="card ${vstat(c)} ${SEL===c.id?'sel':''} ${multi()&&MSEL.has(c.id)?'msel':''}" data-id="${esc(c.id)}"><div class="th">${mid?`<img src="${mp(mid.src)}" loading="lazy" alt="">`:''}
      <div class="scrub">${c.thumbs.map((t,i)=>`<i data-i="${i}"></i>`).join('')}</div>
      ${c.review.status!=='unreviewed'?`<span class="badge ${vstat(c)}">${vstat(c)==='ingested'?sentWord():c.review.status}</span>`:''}${c.offline?'<span class="badge offline" title="The file can\'t be found right now">missing</span>':''}
      <div class="bl">${role(c)?`<span class="role">${esc(role(c))}</span>`:''}${sh?`<span>${esc(sh)}</span>`:''}${hasIO(c)?`<span class="io" title="In and out set by you">In/Out ${(inOut(c)[1]-inOut(c)[0]).toFixed(1)}s</span>`:''}</div>${ioBar(c)}
@@ -937,11 +964,12 @@ function render(){
      <div class="b"><div class="cat${c.review.scene?' me':''}">${esc(eff(c,'scene')||'No scene yet')}</div><div class="ttl">${esc(eff(c,'title')||c.file)}</div>${pn.length?`<div class="ppl">${pn.map(esc).join(', ')}</div>`:''}<div class="d">${esc(eff(c,'description'))}</div>
      <div class="row"><span>${esc((/(C\d{3,4})$/.exec(c.id)||[])[1]||c.file)}${camLens(c)?' · '+esc(camLens(c).replace(/^.* (\d+mm)$/,'$1')):''}</span><span class="stars">${'★'.repeat(c.review.rating||0)}</span></div></div></div>`}).join('')
     ||(total?'<div class="empty">No clips match these filters.</div>':`<div class="empty">${p?'No clips yet. Processing will fill this in.':'Create a project to begin: + New, under Projects.'}</div>`);
-  g.scrollTop=st;
+  g.scrollTop=st;paintSel();
 }
 $('#grid').addEventListener('mousemove',e=>{const i=e.target.closest('.scrub i');if(!i)return;const card=i.closest('.card'),c=CAT.clips[card.dataset.id],im=card.querySelector('img');if(im)im.src=mp(c.thumbs[+i.dataset.i].src)});
 $('#grid').addEventListener('mouseout',e=>{const card=e.target.closest('.card');if(!card||card.contains(e.relatedTarget))return;const c=CAT.clips[card.dataset.id],im=card.querySelector('img');if(im&&c.thumbs.length)im.src=mp(c.thumbs[Math.floor(c.thumbs.length/2)].src)});
-$('#grid').addEventListener('click',e=>{const card=e.target.closest('.card');if(card)select(card.dataset.id)});
+$('#grid').addEventListener('click',e=>{const card=e.target.closest('.card');if(card)clickClip(card.dataset.id,e)});
+$('#grid').addEventListener('mousedown',e=>{if(e.shiftKey&&e.target.closest('.card'))e.preventDefault()});  // no text highlight on Shift-click
 $('#grid').addEventListener('dblclick',e=>{const card=e.target.closest('.card');if(card){select(card.dataset.id);setTab('viewer')}});
 ['#q','#fscene','#fstatus','#frate','#flens','#frole','#fperson','#fshot','#fmove','#fsort'].forEach(s=>$(s).addEventListener('input',render));
 const applySize=()=>document.documentElement.style.setProperty('--card',$('#size').value+'px');
@@ -1149,7 +1177,10 @@ document.addEventListener('keyup',e=>{if(e.key.toLowerCase()==='k')kDown=false})
 document.addEventListener('keydown',e=>{
   if(!$('#clipsView').classList.contains('on')&&!$('#viewerView').classList.contains('on'))return;
   if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)){if(e.key==='Escape')document.activeElement.blur();return}
-  if(e.metaKey||e.ctrlKey||$('#modal').classList.contains('on')||$('#aimodal').classList.contains('on')||crop)return;
+  if($('#modal').classList.contains('on')||$('#aimodal').classList.contains('on')||crop)return;
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='a'){e.preventDefault();if(!LIST.length)return;MSEL=new Set(LIST.map(c=>c.id));if(!SEL||!MSEL.has(SEL))select(LIST[0].id);paintSel();renderMetaPanel();return}
+  if(e.metaKey||e.ctrlKey)return;
+  if(e.key==='Escape'&&multi()){clearSel();return}
   const k=e.key.toLowerCase(),idx=LIST.findIndex(c=>c.id===SEL);
   if(k==='arrowright'||k==='arrowleft'){e.preventDefault();const n=LIST[Math.max(0,Math.min(LIST.length-1,(idx<0?-1:idx)+(k==='arrowright'?1:-1)))];if(n)select(n.id);return}
   if(!SEL)return;const v=$('#v');
@@ -1296,8 +1327,8 @@ function arrangeViewer(){if(!viewerOn()||!$('#dscroll'))return;const ds=$('#dscr
 function renderFilm(){if(!viewerOn())return;if(!SEL&&LIST.length){select(LIST[0].id);return}const p=proj(),i=LIST.findIndex(c=>c.id===SEL);
   $('#vwTitle').textContent=p?p.name:'';$('#vwPos').textContent=LIST.length?(i>=0?`Clip ${i+1} of ${LIST.length}`:`${LIST.length} clips`)+(LIST.length<Object.keys(CAT.clips).length?' · filtered':''):'No clips match the filters';
   $('#filmInfo').textContent=`${LIST.length} clip${LIST.length===1?'':'s'} · ${($('#fsort').selectedOptions[0]||{}).textContent||''}`;
-  $('#film').innerHTML=LIST.map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return `<div class="fi ${vstat(c)} ${c.id===SEL?'sel':''}" data-id="${esc(c.id)}"><div class="fim">${t?`<img src="${mp(t.src)}" loading="lazy" alt="">`:'<div class="ph"></div>'}${ioBar(c)}</div><div class="t">${esc(eff(c,'title')||c.file)}</div></div>`}).join('');
-  $('#film').querySelectorAll('.fi').forEach(el=>el.onclick=()=>select(el.dataset.id));
+  $('#film').innerHTML=LIST.map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return `<div class="fi ${vstat(c)} ${c.id===SEL?'sel':''} ${multi()&&MSEL.has(c.id)?'msel':''}" data-id="${esc(c.id)}"><div class="fim">${t?`<img src="${mp(t.src)}" loading="lazy" alt="">`:'<div class="ph"></div>'}${ioBar(c)}</div><div class="t">${esc(eff(c,'title')||c.file)}</div></div>`}).join('');
+  $('#film').querySelectorAll('.fi').forEach(el=>{el.onclick=e=>clickClip(el.dataset.id,e);el.onmousedown=e=>{if(e.shiftKey)e.preventDefault()}});paintSel();
   $('#film .fi.sel')?.scrollIntoView({block:'nearest',inline:'center'})}
 $('#vwPrev').onclick=()=>{const i=LIST.findIndex(c=>c.id===SEL);if(i>0)select(LIST[i-1].id)};
 $('#vwNext').onclick=()=>{const i=LIST.findIndex(c=>c.id===SEL);if(i<LIST.length-1)select(LIST[i+1].id)};
@@ -1322,6 +1353,7 @@ function renderMetaPanel(){const box=$('#metaPanel');if(!box||!$('#tp-meta').cla
   const projSec=P?`<div class="mproj"><div class="fsec ${MSHUT.has('project')?'shut':''} ${pn?'has':''}" data-mg="project" style="border:0"><div class="fsh"><span class="ch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span><span class="t">Project details</span><span class="n">${pn?pn+' filled':''}</span></div>
      <div class="sub2">Every clip gets these. A value typed on a clip below wins for that clip.</div>
      <div class="fsb" style="padding-left:6px">${PFIELDS.map((f,i)=>`<div class="mf ${pmeta[f]?'filled':''}"><label>${esc(f)}</label><input data-pf="${esc(f)}" value="${esc(pown[f]||'')}" placeholder="${f==='Production Name'?esc(P.name):''}" list="pdl${i}"><datalist id="pdl${i}">${(MSUGGEST[f]||[]).map(o=>`<option value="${esc(o)}">`).join('')}</datalist></div>`).join('')}</div></div></div>`:'';
+  if(multi())return renderMultiMeta(box,projSec,pmeta);
   if(!c){box.innerHTML=projSec+'<div class="pm">Select a clip to fill in its own Resolve metadata. Fill it in once, then copy it to all, approved or shown clips.</div>';bindProjMeta(box);bindMetaSections(box);return}
   const meta=c.review.meta||{},filled=Object.keys(meta).filter(k=>meta[k]),all=Object.values(CAT.clips);
   const used=f=>[...new Set([...(MSUGGEST[f]||[]),...all.map(x=>(x.review.meta||{})[f]).filter(Boolean)])];
@@ -1350,6 +1382,27 @@ function renderMetaPanel(){const box=$('#metaPanel');if(!box||!$('#tp-meta').cla
     copyMeta(Object.fromEntries(fs.filter(f=>m[f]).map(f=>[f,m[f]])),sc)}});
   bindProjMeta(box);bindMetaSections(box);
 }
+// Several clips selected: each field shows the shared value, or "Mixed". A value chosen here is saved to every selected clip.
+function renderMultiMeta(box,projSec,pmeta){const ids=selIds(),cs=ids.map(id=>CAT.clips[id]),all=Object.values(CAT.clips);
+  const used=f=>[...new Set([...(MSUGGEST[f]||[]),...all.map(x=>(x.review.meta||{})[f]).filter(Boolean)])];
+  const vals=f=>[...new Set(cs.map(c=>(c.review.meta||{})[f]||''))];
+  const field=(f,i)=>{const vs=vals(f),mixed=vs.length>1,v=mixed?'':vs[0];
+    const inp=MCHOICE[f]?`<select data-mm="${esc(f)}"><option value="">${mixed?'Mixed':''}</option>${MCHOICE[f].map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('')}</select>`
+      :`<input data-mm="${esc(f)}" value="${esc(v)}" list="mml${i}" placeholder="${mixed?'Mixed':esc(pmeta[f]||'')}"><datalist id="mml${i}">${used(f).map(o=>`<option value="${esc(o)}">`).join('')}</datalist>`;
+    return `<div class="mf ${v?'filled':''} ${mixed?'mixed':''} ${!v&&!mixed&&pmeta[f]?'inh':''}" title="${mixed?esc('Different on these clips: '+vs.map(x=>x||'(empty)').join(', ')):''}"><label>${esc(f)}</label>${inp}</div>`};
+  let k=0;const th=cs.slice(0,10).map(c=>{const t=c.thumbs[Math.floor(c.thumbs.length/2)];return t?`<img src="${mp(t.src)}" alt="">`:''}).join('');
+  box.innerHTML=projSec+`<div class="mclip" style="display:block"><div class="n">Editing ${ids.length} clips <button class="link" data-clearsel>clear</button></div><div class="mthumbs">${th}${ids.length>10?`<span>+${ids.length-10}</span>`:''}</div>
+     <div class="pm">A value you choose or type is saved to all ${ids.length} clips. Fields you leave alone aren't changed.</div></div>
+   ${MGROUPS.map(([g,fs])=>`<div class="fsec ${MSHUT.has(g)?'shut':''}" data-mg="${esc(g)}"><div class="fsh"><span class="ch"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span><span class="t">${esc(g)}</span></div>
+     <div class="fsb" style="padding-left:6px">${fs.map(f=>field(f,k++)).join('')}</div></div>`).join('')}`;
+  box.querySelector('[data-clearsel]').onclick=clearSel;
+  box.querySelectorAll('[data-mm]').forEach(i=>i.onchange=async()=>{const f=i.dataset.mm,v=i.value.trim(),row=i.closest('.mf');
+    if(!v){const vs=vals(f);i.value=vs.length>1?'':vs[0];return toast('Clearing a field on several clips isn\'t possible yet. Nothing was changed.')}
+    const r=await api(`/api/p/${PID}/meta-copy`,{values:{[f]:v},targets:ids});if(r.error)return toast(esc(r.error));
+    cs.forEach(c=>{c.review.meta={...(c.review.meta||{}),[f]:v}});
+    row.classList.remove('mixed','inh');row.classList.add('filled');row.title='';if(i.tagName==='SELECT')i.options[0].textContent='';else i.placeholder='';
+    toast(`${esc(f)} set to “${esc(v)}” on ${r.clips} clips.`)});
+  bindProjMeta(box);bindMetaSections(box)}
 function bindMetaSections(box){box.querySelectorAll('.fsec[data-mg]').forEach(sec=>sec.querySelector('.fsh').onclick=e=>{if(e.target.closest('select'))return;const g=sec.dataset.mg;MSHUT.has(g)?MSHUT.delete(g):MSHUT.add(g);store.set('fs.mshut',[...MSHUT]);sec.classList.toggle('shut',MSHUT.has(g))})}
 function bindProjMeta(box){box.querySelectorAll('[data-pf]').forEach(i=>i.onchange=async()=>{const m={};box.querySelectorAll('[data-pf]').forEach(x=>{if(x.value.trim())m[x.dataset.pf]=x.value.trim()});
   const r=await api(`/api/p/${PID}/update`,{meta:m});if(r.error)return toast(esc(r.error));await refreshLib();renderMetaPanel()})}

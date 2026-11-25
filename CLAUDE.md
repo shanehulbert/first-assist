@@ -122,3 +122,9 @@ reloads itself when the app is back (the status poll also shows that page if the
 - Watch folders.
 - Windows and Linux (the folder picker and Resolve script install are Mac-only).
 - The Claude prices in `tagger.py` (`CLAUDE_MODELS`) were written by hand and have not been checked against Anthropic's price list.
+
+## Selecting several clips (v1.13)
+- ⌘-click adds or removes a clip, Shift-click selects a range in the order shown, ⌘A selects every clip shown, and Esc clears. This works in the Clips grid and the Viewer film strip.
+- `SEL` stays the one clip in the player. `MSEL` is the wider selection and counts only when it holds 2 or more clips. Selected clips get a blue (`--set`) tick.
+- With 2 or more selected, the Metadata panel edits them together. A field shows the shared value or "Mixed". A value chosen there is saved to every selected clip through `meta-copy`, and fields left alone aren't changed. Clearing a field on several clips isn't supported yet.
+- Keyboard shortcuts (A, X, U, stars, I/O, J/K/L) still change only the clip in the player.
